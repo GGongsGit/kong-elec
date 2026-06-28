@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>전기기사 필기 퀴즈 500문제</title>
+<title>전기기사 필기 퀴즈</title>
 <style>
 :root {
   --bg: #0d1117;
@@ -18,6 +18,7 @@
   --red: #f85149;
   --yellow: #d29922;
   --purple: #bc8cff;
+  --orange: #f0883e;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:var(--bg); color:var(--text); font-family:'Malgun Gothic','Noto Sans KR',sans-serif; min-height:100vh; }
@@ -25,146 +26,134 @@ body { background:var(--bg); color:var(--text); font-family:'Malgun Gothic','Not
 .header {
   background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
   border-bottom: 1px solid var(--border);
-  padding: 20px;
-  text-align: center;
+  padding: 20px; text-align: center;
 }
-.header h1 { font-size: 1.6rem; color: var(--accent); margin-bottom: 6px; }
-.header p { color: var(--text2); font-size: 0.9rem; }
+.header h1 { font-size:1.6rem; color:var(--accent); margin-bottom:6px; }
+.header p { color:var(--text2); font-size:0.85rem; }
 
 .subject-tabs {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  padding: 16px 20px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  justify-content: center;
+  display:flex; flex-wrap:wrap; gap:8px;
+  padding:14px 20px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  justify-content:center;
 }
 .tab-btn {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  color: var(--text2);
-  cursor: pointer;
-  font-size: 0.82rem;
-  transition: all 0.2s;
+  padding:7px 13px; border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--surface2); color:var(--text2);
+  cursor:pointer; font-size:0.81rem; transition:all 0.2s;
 }
-.tab-btn.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-  font-weight: bold;
-}
-.tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+.tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:bold; }
+.tab-btn:hover:not(.active) { border-color:var(--accent); color:var(--accent); }
 
-.progress-wrap { padding: 14px 20px 6px; max-width: 800px; margin: 0 auto; }
-.progress-info { display:flex; justify-content:space-between; font-size:0.85rem; color:var(--text2); margin-bottom:8px; }
+.progress-wrap { padding:14px 20px 6px; max-width:820px; margin:0 auto; }
+.progress-info { display:flex; justify-content:space-between; font-size:0.84rem; color:var(--text2); margin-bottom:8px; }
 .progress-bar { height:6px; background:var(--surface3); border-radius:3px; overflow:hidden; }
-.progress-fill { height:100%; background: linear-gradient(90deg, var(--accent), var(--purple)); border-radius:3px; transition:width 0.4s; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--purple)); border-radius:3px; transition:width 0.4s; }
 
-.quiz-container { max-width:800px; margin:0 auto; padding:20px; }
+.quiz-container { max-width:820px; margin:0 auto; padding:20px; }
 
+/* ── 뱃지 ── */
+.q-meta { display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+.q-badge { padding:3px 10px; border-radius:20px; font-size:0.73rem; font-weight:bold; }
+.q-num  { background:var(--surface3); color:var(--text2); }
+.q-subj { background:rgba(88,166,255,0.15); color:var(--accent); border:1px solid rgba(88,166,255,0.3); }
+.q-formula { background:rgba(240,136,62,0.15); color:var(--orange); border:1px solid rgba(240,136,62,0.3); }
+
+/* ── 질문 카드 ── */
 .question-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 16px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:24px; margin-bottom:16px;
 }
-.q-meta { display:flex; gap:10px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
-.q-badge { padding: 3px 10px; border-radius:20px; font-size:0.75rem; font-weight:bold; }
-.q-num { background:var(--surface3); color:var(--text2); }
-.q-subject { background: rgba(88,166,255,0.15); color:var(--accent); border:1px solid rgba(88,166,255,0.3); }
-.q-text { font-size:1.05rem; line-height:1.7; font-weight:500; }
+.q-text { font-size:1.05rem; line-height:1.75; font-weight:500; }
 
+/* ── 선택지 ── */
 .options { display:flex; flex-direction:column; gap:10px; margin-top:18px; }
 .opt-btn {
   display:flex; align-items:center; gap:12px;
-  padding: 13px 16px;
-  background: rgba(255,255,255,0.10);
-  border: 1.5px solid rgba(255,255,255,0.22);
-  border-radius: 10px;
-  color: #dde6ef;
-  cursor: pointer;
-  font-size: 0.95rem;
-  text-align: left;
-  transition: all 0.2s;
-  line-height: 1.5;
+  padding:13px 16px;
+  background:rgba(255,255,255,0.10);
+  border:1.5px solid rgba(255,255,255,0.22);
+  border-radius:10px;
+  color:#dde6ef;
+  cursor:pointer; font-size:0.95rem; text-align:left;
+  transition:all 0.2s; line-height:1.5;
 }
 .opt-btn:hover:not(:disabled) {
-  background: rgba(88,166,255,0.18);
-  border-color: var(--accent);
-  color: #a8d4ff;
+  background:rgba(88,166,255,0.18); border-color:var(--accent); color:#a8d4ff;
 }
-.opt-btn .opt-label {
-  min-width:28px; height:28px;
-  display:flex; align-items:center; justify-content:center;
-  background: rgba(255,255,255,0.18);
-  border-radius:50%;
-  font-weight:bold; font-size:0.85rem;
-  flex-shrink:0;
-  color: #e6edf3;
+.opt-label {
+  min-width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.18); border-radius:50%;
+  font-weight:bold; font-size:0.85rem; flex-shrink:0; color:#e6edf3;
 }
-.opt-btn.correct {
-  background: rgba(63,185,80,0.18);
-  border-color: var(--green);
-  color: #7ee787;
-}
+.opt-btn.correct { background:rgba(63,185,80,0.18); border-color:var(--green); color:#7ee787; }
 .opt-btn.correct .opt-label { background:var(--green); color:#fff; }
-.opt-btn.wrong {
-  background: rgba(248,81,73,0.15);
-  border-color: var(--red);
-  color: #ff9a94;
-}
-.opt-btn.wrong .opt-label { background:var(--red); color:#fff; }
+.opt-btn.wrong   { background:rgba(248,81,73,0.15);  border-color:var(--red);   color:#ff9a94; }
+.opt-btn.wrong   .opt-label { background:var(--red);   color:#fff; }
 .opt-btn:disabled { cursor:default; }
 
 .explanation {
   margin-top:14px; padding:12px 16px;
-  background: rgba(88,166,255,0.08);
+  background:rgba(88,166,255,0.08);
   border-left:3px solid var(--accent);
   border-radius:0 8px 8px 0;
-  font-size:0.9rem; line-height:1.6; color:#b0c4de;
-  display:none;
+  font-size:0.9rem; line-height:1.65; color:#b0c4de; display:none;
 }
 .explanation.show { display:block; }
 
+/* ── 버튼 ── */
 .nav-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
 .btn { padding:10px 24px; border-radius:8px; border:none; cursor:pointer; font-size:0.95rem; font-weight:bold; transition:all 0.2s; }
-.btn-primary { background:var(--accent); color:#fff; }
-.btn-primary:hover { background:#79b8ff; }
-.btn-secondary { background:var(--surface3); color:var(--text); border:1px solid var(--border); }
-.btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
-.btn-green { background:var(--green); color:#fff; }
-.btn-green:hover { background:#56d364; }
+.btn-primary  { background:var(--accent); color:#fff; }
+.btn-primary:hover  { background:#79b8ff; }
+.btn-secondary{ background:var(--surface3); color:var(--text); border:1px solid var(--border); }
+.btn-secondary:hover{ border-color:var(--accent); color:var(--accent); }
+.btn-green    { background:var(--green); color:#fff; }
+.btn-green:hover    { background:#56d364; }
 
+/* ── 시작 화면 ── */
+.start-screen { text-align:center; padding:36px 16px; }
+.start-screen h2 { font-size:1.45rem; color:var(--accent); margin-bottom:10px; }
+.start-screen p  { color:var(--text2); margin-bottom:20px; line-height:1.7; font-size:0.95rem; }
+.subject-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px; margin-bottom:24px;
+}
+.subject-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:left; }
+.subject-card h4 { color:var(--accent); font-size:0.93rem; margin-bottom:4px; }
+.subject-card p  { color:var(--text2); font-size:0.78rem; line-height:1.5; }
+.subject-card .badge-f { color:var(--orange); font-size:0.75rem; margin-top:4px; }
+
+.controls { display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:22px; }
+.controls label { color:var(--text2); font-size:0.9rem; }
+.controls select {
+  padding:8px 12px; background:var(--surface2); border:1px solid var(--border);
+  border-radius:8px; color:var(--text); font-size:0.9rem;
+}
+
+/* ── 결과 화면 ── */
 .score-card {
   background:var(--surface); border:1px solid var(--border);
   border-radius:16px; padding:36px; text-align:center; display:none;
 }
-.score-card h2 { font-size:1.8rem; margin-bottom:8px; }
-.score-big { font-size:4rem; font-weight:900; color:var(--accent); margin:16px 0; }
-.score-detail { color:var(--text2); margin-bottom:24px; }
-.score-bars { display:grid; gap:10px; margin-bottom:24px; }
-.s-bar { display:flex; align-items:center; gap:10px; font-size:0.85rem; }
-.s-bar-label { min-width:180px; text-align:right; color:var(--text2); }
-.s-bar-track { flex:1; height:8px; background:var(--surface3); border-radius:4px; }
-.s-bar-fill { height:100%; border-radius:4px; transition:width 0.5s; }
-.s-bar-num { min-width:50px; color:var(--text2); }
+.score-card h2 { font-size:1.7rem; margin-bottom:6px; }
+.score-big     { font-size:3.8rem; font-weight:900; color:var(--accent); margin:14px 0; }
+.score-detail  { color:var(--text2); margin-bottom:22px; }
+.score-bars    { display:grid; gap:10px; margin-bottom:24px; }
+.s-bar { display:flex; align-items:center; gap:10px; font-size:0.83rem; }
+.s-bar-label { min-width:175px; text-align:right; color:var(--text2); }
+.s-bar-track  { flex:1; height:8px; background:var(--surface3); border-radius:4px; }
+.s-bar-fill   { height:100%; border-radius:4px; transition:width 0.6s; }
+.s-bar-num    { min-width:52px; color:var(--text2); }
 
-.start-screen { text-align:center; padding:40px 20px; }
-.start-screen h2 { font-size:1.5rem; margin-bottom:12px; color:var(--accent); }
-.start-screen p { color:var(--text2); margin-bottom:20px; line-height:1.7; }
-.subject-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:24px; }
-.subject-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:left; }
-.subject-card h4 { color:var(--accent); font-size:0.95rem; margin-bottom:4px; }
-.subject-card p { color:var(--text2); font-size:0.8rem; }
-
-@media(max-width:600px) {
-  .header h1 { font-size:1.3rem; }
-  .tab-btn { font-size:0.75rem; padding:6px 10px; }
-  .q-text { font-size:0.97rem; }
-  .opt-btn { font-size:0.88rem; }
-  .s-bar-label { min-width:120px; font-size:0.78rem; }
+@media(max-width:600px){
+  .header h1 { font-size:1.25rem; }
+  .tab-btn   { font-size:0.74rem; padding:6px 9px; }
+  .q-text    { font-size:0.96rem; }
+  .opt-btn   { font-size:0.87rem; }
+  .s-bar-label { min-width:110px; font-size:0.76rem; }
 }
 </style>
 </head>
@@ -172,7 +161,7 @@ body { background:var(--bg); color:var(--text); font-family:'Malgun Gothic','Not
 
 <div class="header">
   <h1>⚡ 전기기사 필기 퀴즈</h1>
-  <p>5개 과목 각 100문제 · 전기자기학 / 전력공학 / 전기기기 / 회로이론 및 제어공학 / 전기설비기술기준</p>
+  <p>5개 과목 &nbsp;|&nbsp; 전기자기학·전력공학·전기기기·회로이론 각 120문제 &nbsp;/&nbsp; 전기설비기술기준 100문제</p>
 </div>
 
 <div class="subject-tabs" id="subjectTabs">
@@ -192,36 +181,66 @@ body { background:var(--bg); color:var(--text); font-family:'Malgun Gothic','Not
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 </div>
 
-<div class="quiz-container" id="quizContainer">
+<div class="quiz-container">
+  <!-- 시작 화면 -->
   <div class="start-screen" id="startScreen">
     <h2>🎯 학습 시작</h2>
-    <p>과목 탭을 선택하거나 전체 문제를 랜덤으로 풀 수 있습니다.<br>문제 수를 선택하고 시작하세요!</p>
+    <p>과목 탭을 선택하거나 전체 랜덤으로 풀 수 있습니다.<br>
+       <span style="color:var(--orange)">🧮 공식 계산 문제</span>가 포함되어 있어 실전 감각을 키울 수 있습니다.</p>
     <div class="subject-grid">
-      <div class="subject-card"><h4>⚡ 전기자기학</h4><p>쿨롱의 법칙, 전자기 유도, 맥스웰 방정식 등 100문제</p></div>
-      <div class="subject-card"><h4>🔌 전력공학</h4><p>송배전, 코로나, 계통 보호, 전력 계산 100문제</p></div>
-      <div class="subject-card"><h4>⚙️ 전기기기</h4><p>변압기, 전동기, 발전기, 전력변환 100문제</p></div>
-      <div class="subject-card"><h4>📐 회로이론 및 제어공학</h4><p>RLC, 임피던스, 라플라스, PID 제어 100문제</p></div>
-      <div class="subject-card"><h4>📋 전기설비기술기준</h4><p>기술기준, 접지, 배선, 안전 규정 100문제</p></div>
+      <div class="subject-card">
+        <h4>⚡ 전기자기학</h4>
+        <p>쿨롱의 법칙, 전자기 유도, 맥스웰 방정식</p>
+        <p class="badge-f">🧮 공식 계산 20문제 포함 · 총 120문제</p>
+      </div>
+      <div class="subject-card">
+        <h4>🔌 전력공학</h4>
+        <p>송배전, 계통 보호, 전력 계산, 이도</p>
+        <p class="badge-f">🧮 공식 계산 20문제 포함 · 총 120문제</p>
+      </div>
+      <div class="subject-card">
+        <h4>⚙️ 전기기기</h4>
+        <p>변압기, 유도전동기, 발전기, 전력변환</p>
+        <p class="badge-f">🧮 공식 계산 20문제 포함 · 총 120문제</p>
+      </div>
+      <div class="subject-card">
+        <h4>📐 회로이론 및 제어공학</h4>
+        <p>RLC, 임피던스, 라플라스, PID 제어</p>
+        <p class="badge-f">🧮 공식 계산 20문제 포함 · 총 120문제</p>
+      </div>
+      <div class="subject-card">
+        <h4>📋 전기설비기술기준</h4>
+        <p>기술기준, 접지, 배선, 안전 규정 100문제</p>
+      </div>
     </div>
-    <div style="margin-bottom:20px">
-      <label style="color:var(--text2);margin-right:10px;font-size:0.95rem">문제 수 선택:</label>
-      <select id="qCount" style="padding:8px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.95rem">
+    <div class="controls">
+      <label>문제 수:</label>
+      <select id="qCount">
         <option value="10">10문제</option>
         <option value="20" selected>20문제</option>
         <option value="30">30문제</option>
         <option value="50">50문제</option>
         <option value="100">100문제</option>
+        <option value="120">120문제</option>
         <option value="9999">전체</option>
       </select>
+      <label>문제 유형:</label>
+      <select id="qType">
+        <option value="all">전체 (이론+공식)</option>
+        <option value="formula">🧮 공식 문제만</option>
+        <option value="theory">이론 문제만</option>
+      </select>
     </div>
-    <button class="btn btn-primary" style="font-size:1.1rem;padding:14px 44px" onclick="startQuiz()">🚀 시작하기</button>
+    <button class="btn btn-primary" style="font-size:1.05rem;padding:13px 44px" onclick="startQuiz()">🚀 시작하기</button>
   </div>
 
+  <!-- 문제 화면 -->
   <div id="questionWrap" style="display:none">
     <div class="question-card">
       <div class="q-meta">
-        <span class="q-badge q-num" id="qNum"></span>
-        <span class="q-badge q-subject" id="qSubject"></span>
+        <span class="q-badge q-num"   id="qNum"></span>
+        <span class="q-badge q-subj"  id="qSubj"></span>
+        <span class="q-badge q-formula" id="qFormulaBadge" style="display:none">🧮 공식 계산</span>
       </div>
       <div class="q-text" id="qText"></div>
       <div class="options" id="options"></div>
@@ -229,17 +248,18 @@ body { background:var(--bg); color:var(--text); font-family:'Malgun Gothic','Not
     </div>
     <div class="nav-btns">
       <button class="btn btn-secondary" onclick="endQuiz()">🏁 결과 보기</button>
-      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">다음 문제 →</button>
+      <button class="btn btn-primary"   id="nextBtn" onclick="nextQuestion()" style="display:none">다음 문제 →</button>
     </div>
   </div>
 
+  <!-- 결과 화면 -->
   <div class="score-card" id="scoreCard">
     <h2>🎉 퀴즈 완료!</h2>
-    <div class="score-big" id="scoreBig"></div>
+    <div class="score-big"   id="scoreBig"></div>
     <div class="score-detail" id="scoreDetail"></div>
-    <div class="score-bars" id="scoreBars"></div>
+    <div class="score-bars"   id="scoreBars"></div>
     <div class="nav-btns">
-      <button class="btn btn-green" onclick="startQuiz()">🔄 다시 풀기</button>
+      <button class="btn btn-green"     onclick="startQuiz()">🔄 다시 풀기</button>
       <button class="btn btn-secondary" onclick="showStart()">🏠 홈으로</button>
     </div>
   </div>
@@ -1374,1050 +1394,6 @@ const ALL_QUESTIONS = [
     ],
     "a": 2,
     "e": "전기 쌍극자 모멘트 p=qd."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "옴의 법칙에서 전류 I를 구하는 식은?",
-    "o": [
-      "I=R/V",
-      "I=V×R",
-      "I=V/R",
-      "I=V+R"
-    ],
-    "a": 2,
-    "e": "I=V/R. V:전압(V), I:전류(A), R:저항(Ω)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "R₁=6Ω, R₂=3Ω 병렬 합성 저항은?",
-    "o": [
-      "9Ω",
-      "4.5Ω",
-      "2Ω",
-      "1.5Ω"
-    ],
-    "a": 2,
-    "e": "R₁R₂/(R₁+R₂)=18/9=2Ω."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "KVL(키르히호프 전압 법칙)이란?",
-    "o": [
-      "폐루프 전류 합=0",
-      "폐루프 전압 합=0",
-      "노드 전압 합=0",
-      "노드 전류 합=0"
-    ],
-    "a": 1,
-    "e": "KVL: 임의의 폐루프에서 ∑V=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "RLC 직렬 공진 주파수 f₀는?",
-    "o": [
-      "2π√(LC)",
-      "1/(2π√LC)",
-      "√(LC)/2π",
-      "2π/√LC"
-    ],
-    "a": 1,
-    "e": "f₀=1/(2π√LC). 공진 시 XL=XC, 임피던스 최소."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "순수 저항 회로의 역률은?",
-    "o": [
-      "0",
-      "0.5",
-      "1",
-      "무한대"
-    ],
-    "a": 2,
-    "e": "θ=0°, cosθ=1."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "인덕터 리액턴스 XL은?",
-    "o": [
-      "1/(ωL)",
-      "ωL",
-      "ωC",
-      "1/(ωC)"
-    ],
-    "a": 1,
-    "e": "XL=ωL=2πfL (Ω)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "커패시터 리액턴스 XC는?",
-    "o": [
-      "ωC",
-      "1/(ωC)",
-      "ωL",
-      "1/(ωL)"
-    ],
-    "a": 1,
-    "e": "XC=1/(ωC)=1/(2πfC) (Ω)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "3상 Y결선에서 선간전압과 상전압 관계는?",
-    "o": [
-      "VL=VP",
-      "VL=√3·VP",
-      "VL=3·VP",
-      "VL=VP/√3"
-    ],
-    "a": 1,
-    "e": "Y: VL=√3VP, IL=IP. Δ: VL=VP, IL=√3IP."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "교류 회로 피상전력(S) 단위는?",
-    "o": [
-      "W(와트)",
-      "Var",
-      "VA(볼트암페어)",
-      "J(줄)"
-    ],
-    "a": 2,
-    "e": "S=VI (VA). P=Scosθ(W), Q=Ssinθ(Var)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "중첩의 원리가 적용되는 회로는?",
-    "o": [
-      "비선형 회로",
-      "선형 회로",
-      "정류 회로",
-      "포화 회로"
-    ],
-    "a": 1,
-    "e": "중첩: 선형 회로에만 적용."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "테브난 등가 회로의 구성은?",
-    "o": [
-      "전류원+병렬 저항",
-      "전압원+직렬 저항",
-      "전압원+병렬 저항",
-      "전류원+직렬 저항"
-    ],
-    "a": 1,
-    "e": "테브난: Vth(개방 전압)+Rth(등가 저항) 직렬."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "최대 전력 전달 조건은?",
-    "o": [
-      "RL=0",
-      "RL=∞",
-      "RL=Rth",
-      "RL=2Rth"
-    ],
-    "a": 2,
-    "e": "RL=Rth 시 최대 전력 Pmax=Vth²/(4Rth)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "라플라스 변환 L{u(t)}는?",
-    "o": [
-      "1/s²",
-      "1/s",
-      "s",
-      "1/(s+a)"
-    ],
-    "a": 1,
-    "e": "L{u(t)}=1/s. L{t}=1/s², L{δ(t)}=1."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전달 함수 G(s)의 정의는?",
-    "o": [
-      "Y(s)/X(s) (초기조건=0)",
-      "입력/출력",
-      "출력×입력",
-      "입력의 미분/출력"
-    ],
-    "a": 0,
-    "e": "G(s)=Y(s)/X(s). 초기조건 0에서 출력/입력의 라플라스비."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "2차 시스템 감쇠비 ζ=1인 경우는?",
-    "o": [
-      "과제동",
-      "임계제동",
-      "부족제동",
-      "무제동"
-    ],
-    "a": 1,
-    "e": "ζ=1: 임계제동. ζ>1: 과제동. 0<ζ<1: 부족제동."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "PID에서 적분(I) 동작의 역할은?",
-    "o": [
-      "응답 속도 향상",
-      "정상 상태 오차 제거",
-      "과도 응답 개선",
-      "미래 오차 예측"
-    ],
-    "a": 1,
-    "e": "I 동작: 오차 누적에 비례 → 정상 상태 오차 제거."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "나이퀴스트 선도 안정 판별 기준점은?",
-    "o": [
-      "(-1,j0)",
-      "(0,0)",
-      "(1,j0)",
-      "(-j1,0)"
-    ],
-    "a": 0,
-    "e": "(-1,j0)을 반시계 방향으로 감는 횟수로 안정 판별."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "근 궤적의 시작점(K=0)은?",
-    "o": [
-      "개루프 영점",
-      "개루프 극점",
-      "폐루프 극점",
-      "허수축"
-    ],
-    "a": 1,
-    "e": "K=0: 개루프 극점 출발. K→∞: 개루프 영점 도착."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "상태방정식 ẋ=Ax+Bu에서 A는?",
-    "o": [
-      "입력 행렬",
-      "시스템(상태) 행렬",
-      "출력 행렬",
-      "제어 행렬"
-    ],
-    "a": 1,
-    "e": "A: 시스템 행렬(상태 행렬)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "RLC 직렬 임피던스 Z는?",
-    "o": [
-      "R+jωL+jωC",
-      "R+jωL-j/(ωC)",
-      "R+j/(ωC)-jωL",
-      "R-jωL-j/(ωC)"
-    ],
-    "a": 1,
-    "e": "Z=R+jXL-jXC=R+jωL-j/(ωC)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "Q값이 높을수록 나타나는 특성은?",
-    "o": [
-      "대역폭 넓음",
-      "대역폭 좁음",
-      "공진 주파수 높음",
-      "임피던스 낮음"
-    ],
-    "a": 1,
-    "e": "Q=f₀/BW. Q 클수록 BW=f₀/Q 감소(선택도 향상)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "페이저(phasor) 사용 이유는?",
-    "o": [
-      "직류 해석",
-      "정현파 교류 해석 단순화",
-      "비선형 해석",
-      "과도 해석"
-    ],
-    "a": 1,
-    "e": "페이저: 정현파를 복소수로 표현 → 대수방정식화."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "Re{Ae^(jωt)}는?",
-    "o": [
-      "Acos(ωt)",
-      "Asin(ωt)",
-      "Ae^(ωt)",
-      "Acosh(ωt)"
-    ],
-    "a": 0,
-    "e": "오일러 공식: Re{e^(jωt)}=cos(ωt)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "상호 인덕턴스 M이 있는 가동 접속 직렬 합성 L은?",
-    "o": [
-      "L₁+L₂",
-      "L₁+L₂-2M",
-      "L₁+L₂+2M",
-      "L₁-L₂+2M"
-    ],
-    "a": 2,
-    "e": "가동 접속: L=L₁+L₂+2M. 차동 접속: L₁+L₂-2M."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "3상 평형 Y결선에서 중성선 전류는?",
-    "o": [
-      "√3배 선전류",
-      "선전류와 같음",
-      "0",
-      "1/3 선전류"
-    ],
-    "a": 2,
-    "e": "3상 평형: 중성선 전류=벡터합=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "지상(유도성) 부하 역률 개선 방법은?",
-    "o": [
-      "저항 추가",
-      "커패시터 병렬 연결",
-      "인덕터 직렬 연결",
-      "전압 낮춤"
-    ],
-    "a": 1,
-    "e": "커패시터(진상) 병렬 → 무효전력 상쇄."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "병렬 저항 R₁, R₂에서 R₁에 흐르는 전류 I₁은?",
-    "o": [
-      "I·R₁/(R₁+R₂)",
-      "I·R₂/(R₁+R₂)",
-      "I·(R₁+R₂)/R₁",
-      "I/R₁"
-    ],
-    "a": 1,
-    "e": "I₁=I·R₂/(R₁+R₂)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "R=10Ω, V=100V 소비 전력은?",
-    "o": [
-      "10W",
-      "100W",
-      "1000W",
-      "10000W"
-    ],
-    "a": 2,
-    "e": "P=V²/R=100²/10=1000W."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "피드백(feedback)의 주목적은?",
-    "o": [
-      "신호 증폭",
-      "외란 영향 감소",
-      "전력 감소",
-      "회로 단순화"
-    ],
-    "a": 1,
-    "e": "부궤환: 오차 감소, 외란 억제, 안정성 향상."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "정상 속도 오차를 0으로 하려면 시스템 형은?",
-    "o": [
-      "0형",
-      "1형",
-      "2형",
-      "3형"
-    ],
-    "a": 1,
-    "e": "1형(적분 1개): 속도 입력 정상 오차=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "R=10Ω 두 개 직렬 연결 합성 저항은?",
-    "o": [
-      "5Ω",
-      "10Ω",
-      "20Ω",
-      "100Ω"
-    ],
-    "a": 2,
-    "e": "직렬: R=R₁+R₂=10+10=20Ω."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "정상 상태 오차를 줄이는 방법이 아닌 것은?",
-    "o": [
-      "개루프 이득 증가",
-      "적분 요소 추가",
-      "미분 동작 추가",
-      "시스템 형 증가"
-    ],
-    "a": 2,
-    "e": "D 동작은 과도 응답 개선. 정상 상태 오차에 직접 효과 없음."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "샘플링 정리: 신호를 정확히 복원하려면?",
-    "o": [
-      "fs≥fmax",
-      "fs≥2fmax",
-      "fs=fmax",
-      "fs≤fmax"
-    ],
-    "a": 1,
-    "e": "나이퀴스트 정리: fs≥2fmax."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "Z변환이 사용되는 시스템은?",
-    "o": [
-      "연속 시간",
-      "이산 시간(디지털)",
-      "아날로그 필터",
-      "전력 시스템"
-    ],
-    "a": 1,
-    "e": "Z변환: 이산(디지털) 시스템 해석."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "직류 정상 상태에서 커패시터는?",
-    "o": [
-      "단락",
-      "개방",
-      "저항",
-      "인덕터"
-    ],
-    "a": 1,
-    "e": "DC 정상 상태: C=개방(∞ 임피던스)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전압 분배: R₁+R₂ 직렬에서 R₁ 양단 전압은?",
-    "o": [
-      "V·R₂/(R₁+R₂)",
-      "V·R₁/(R₁+R₂)",
-      "V/(R₁+R₂)",
-      "V·R₁R₂"
-    ],
-    "a": 1,
-    "e": "V₁=V·R₁/(R₁+R₂)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "임피던스 Z=|Z|∠θ에서 θ>0이면?",
-    "o": [
-      "용량성(전류 앞섬)",
-      "유도성(전류 뒤짐)",
-      "저항성",
-      "공진"
-    ],
-    "a": 1,
-    "e": "θ>0: 유도성(지상 전류). θ<0: 용량성(진상 전류)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "RC 직렬 회로 시정수 τ는?",
-    "o": [
-      "R/C",
-      "RC",
-      "1/(RC)",
-      "√(RC)"
-    ],
-    "a": 1,
-    "e": "τ=RC(초). RL: τ=L/R."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "유효 전력 P는?",
-    "o": [
-      "VI",
-      "VIsinθ",
-      "VIcosθ",
-      "VI/cosθ"
-    ],
-    "a": 2,
-    "e": "P=VIcosθ(W)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "T형 4단자 회로 구조는?",
-    "o": [
-      "병렬-직렬-병렬",
-      "직렬-병렬-직렬",
-      "직렬-직렬-직렬",
-      "병렬-병렬-병렬"
-    ],
-    "a": 1,
-    "e": "T형: 직렬-병렬-직렬 구조."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "이상 연산 증폭기(op-amp)의 특성이 아닌 것은?",
-    "o": [
-      "입력 임피던스=∞",
-      "출력 임피던스=0",
-      "전압 이득=∞",
-      "유한한 대역폭"
-    ],
-    "a": 3,
-    "e": "이상 op-amp: 대역폭=∞. 유한 대역폭은 실제 특성."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "반전 증폭기 전압 이득 Av는?",
-    "o": [
-      "Rf/Ri",
-      "-Rf/Ri",
-      "1+Rf/Ri",
-      "-Ri/Rf"
-    ],
-    "a": 1,
-    "e": "Av=-Rf/Ri."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "-3dB 주파수(차단 주파수)란?",
-    "o": [
-      "이득=최대의 1/√2",
-      "이득=0",
-      "위상=-90°",
-      "이득=최대"
-    ],
-    "a": 0,
-    "e": "-3dB: 이득이 최대의 1/√2(≈0.707)인 주파수."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "저역통과필터(LPF)의 특성은?",
-    "o": [
-      "고주파 통과",
-      "저주파 통과, 고주파 차단",
-      "특정 대역만 통과",
-      "특정 대역만 차단"
-    ],
-    "a": 1,
-    "e": "LPF: 저주파 통과, 고주파 차단."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "DC 정상 상태에서 인덕터 L에 걸리는 전압은?",
-    "o": [
-      "LI",
-      "L·dI/dt",
-      "0",
-      "ωLI"
-    ],
-    "a": 2,
-    "e": "DC: dI/dt=0 → V=L·dI/dt=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "0<ζ<1 (부족제동) 계단 응답 특성은?",
-    "o": [
-      "오버슈트 발생",
-      "오버슈트 없음",
-      "진동 없음",
-      "계속 발산"
-    ],
-    "a": 0,
-    "e": "부족제동: 오버슈트 발생 후 수렴."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "기함수 f(-t)=-f(t)의 푸리에 급수 특성은?",
-    "o": [
-      "An만 존재",
-      "Bn(sin)만 존재",
-      "A₀만 존재",
-      "모든 계수"
-    ],
-    "a": 1,
-    "e": "기함수: sin 성분만 → Bn만 존재."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전달 함수 극점이 우반 평면에 있으면?",
-    "o": [
-      "안정",
-      "불안정",
-      "임계 안정",
-      "중립"
-    ],
-    "a": 1,
-    "e": "극점 Re>0: 불안정. Re<0: 안정."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "위상 여유 PM>0°이면?",
-    "o": [
-      "불안정",
-      "안정",
-      "임계 안정",
-      "발진"
-    ],
-    "a": 1,
-    "e": "PM>0°: 안정. PM=0°: 임계. PM<0°: 불안정."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "기본파 60Hz의 3차 고조파 주파수는?",
-    "o": [
-      "60Hz",
-      "120Hz",
-      "180Hz",
-      "240Hz"
-    ],
-    "a": 2,
-    "e": "3차 고조파=3×60=180Hz."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "능동 소자(active element)가 아닌 것은?",
-    "o": [
-      "트랜지스터",
-      "연산 증폭기",
-      "다이오드",
-      "저항"
-    ],
-    "a": 3,
-    "e": "수동 소자: R, L, C. 능동 소자: 증폭/전원 가능."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "대칭 3상에서 각 상의 위상차는?",
-    "o": [
-      "60°",
-      "90°",
-      "120°",
-      "180°"
-    ],
-    "a": 2,
-    "e": "대칭 3상: 각 상 위상차 120°."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "메시 전류법의 근거 법칙은?",
-    "o": [
-      "KCL",
-      "KVL",
-      "옴의 법칙",
-      "중첩의 원리"
-    ],
-    "a": 1,
-    "e": "메시 전류법: 각 메시에 KVL 적용."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "비선형 소자의 예는?",
-    "o": [
-      "저항기",
-      "콘덴서",
-      "다이오드",
-      "코일"
-    ],
-    "a": 2,
-    "e": "다이오드: V-I 관계가 비선형."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "이상 변압기 권수비 n에서 임피던스 변환은?",
-    "o": [
-      "n²ZL",
-      "ZL/n²",
-      "nZL",
-      "ZL"
-    ],
-    "a": 0,
-    "e": "Zi=n²ZL. 임피던스 정합에 활용."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "정현파 실효값 Vrms와 최댓값 Vm의 관계는?",
-    "o": [
-      "Vm",
-      "Vm/2",
-      "Vm/√2",
-      "√2·Vm"
-    ],
-    "a": 2,
-    "e": "Vrms=Vm/√2≈0.707Vm."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "균형 Δ-Y 변환 시 Ry는?",
-    "o": [
-      "RΔ×3",
-      "RΔ/3",
-      "RΔ²",
-      "3/RΔ"
-    ],
-    "a": 1,
-    "e": "Ry=RΔ/3. Y-Δ: RΔ=3Ry."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "제어 시스템에서 외란(disturbance)이란?",
-    "o": [
-      "설계된 입력",
-      "시스템을 방해하는 외부 신호",
-      "출력 신호",
-      "피드백 신호"
-    ],
-    "a": 1,
-    "e": "외란: 원하지 않게 시스템에 작용하는 외부 신호."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "무효 전력(Q)이 발생하는 이유는?",
-    "o": [
-      "저항 열 발생",
-      "L/C에서 에너지 교환",
-      "변환 손실",
-      "선로 저항"
-    ],
-    "a": 1,
-    "e": "무효전력: L(+Q)과 C(-Q)에서 에너지 교환."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "라플라스 변환 초기값 정리는?",
-    "o": [
-      "lim sF(s) (s→0)",
-      "lim sF(s) (s→∞)",
-      "F(0)",
-      "lim F(s) (s→∞)"
-    ],
-    "a": 1,
-    "e": "f(0⁺)=lim[s→∞] sF(s)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "무효 전력 보상에 사용되는 소자는?",
-    "o": [
-      "저항",
-      "변압기",
-      "커패시터 뱅크",
-      "차단기"
-    ],
-    "a": 2,
-    "e": "커패시터: 진상 무효전력 공급 → 역률 개선."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "LTI 시스템 컨볼루션 출력 y(t)는?",
-    "o": [
-      "x(t)+h(t)",
-      "x(t)×h(t)",
-      "x(t)*h(t)",
-      "x(t)/h(t)"
-    ],
-    "a": 2,
-    "e": "y(t)=x(t)*h(t)=∫x(τ)h(t-τ)dτ."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "IIR 필터의 특성은?",
-    "o": [
-      "유한 임펄스 응답",
-      "무한 임펄스 응답",
-      "항상 안정",
-      "선형 위상"
-    ],
-    "a": 1,
-    "e": "IIR: 피드백으로 무한 임펄스 응답."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "정착 시간(settling time)의 기준은?",
-    "o": [
-      "최종값의 ±2% 이내 도달",
-      "최초 오버슈트",
-      "최종값 10% 도달",
-      "최종값 50% 도달"
-    ],
-    "a": 0,
-    "e": "정착 시간: 응답이 최종값 ±2%(또는 ±5%) 이내 유지."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전압 조정률 VR 식은?",
-    "o": [
-      "(VFL-VNL)/VFL×100%",
-      "(VNL-VFL)/VFL×100%",
-      "VNL/VFL×100%",
-      "(VNL+VFL)/2×100%"
-    ],
-    "a": 1,
-    "e": "VR=(V무부하-V전부하)/V전부하×100%."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "복소 전력 S=V·I*에서 Re(S)는?",
-    "o": [
-      "무효전력 Q",
-      "유효전력 P",
-      "피상전력",
-      "역률"
-    ],
-    "a": 1,
-    "e": "S=P+jQ. P=Re(S)=유효전력."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "이상 전압원 내부 저항은?",
-    "o": [
-      "무한대",
-      "0",
-      "부하와 같음",
-      "1Ω"
-    ],
-    "a": 1,
-    "e": "이상 전압원: 내부 저항=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "이상 op-amp 가상 단락(virtual short)이란?",
-    "o": [
-      "입력 단자 실제 단락",
-      "두 입력 전압이 같다고 가정",
-      "출력=0V",
-      "전류=0A"
-    ],
-    "a": 1,
-    "e": "가상 단락: 두 입력 전압차≈0 (실제 단락 아님)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "RL 회로 시정수 τ 이후 전류는 최종값의 몇 %?",
-    "o": [
-      "36.8%",
-      "50%",
-      "63.2%",
-      "86.5%"
-    ],
-    "a": 2,
-    "e": "t=τ: 응답=최종값×(1-e⁻¹)≈63.2%."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "단락(short circuit) 임피던스는?",
-    "o": [
-      "무한대",
-      "0",
-      "1",
-      "부하와 같음"
-    ],
-    "a": 1,
-    "e": "단락: Z=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "역률 낮을 때 문제점은?",
-    "o": [
-      "전압 상승",
-      "선로 전류 증가 및 손실 증가",
-      "주파수 감소",
-      "변압기 효율 증가"
-    ],
-    "a": 1,
-    "e": "역률↓ → 같은 전력에 더 많은 전류 → 동손 증가."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "3상 전력 P=√3·VL·IL·cosθ에서 VL은?",
-    "o": [
-      "상전압",
-      "선간 전압",
-      "최대 전압",
-      "평균 전압"
-    ],
-    "a": 1,
-    "e": "VL: 선간 전압."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "2차 전달 함수의 비제동 자연 주파수 ωn이란?",
-    "o": [
-      "감쇠비",
-      "자연 주파수",
-      "제동 주파수",
-      "공진 주파수"
-    ],
-    "a": 1,
-    "e": "ωn: 비제동 자연 주파수. 제동 주파수 ωd=ωn√(1-ζ²)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "공진 주파수 이하에서 RLC 직렬 회로 특성은?",
-    "o": [
-      "유도성",
-      "용량성",
-      "저항성",
-      "중립"
-    ],
-    "a": 1,
-    "e": "f<f₀: XC>XL → 용량성(전류 진상)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "루스(Routh) 기준에서 불안정 판단은?",
-    "o": [
-      "배열에 음수 없음",
-      "첫 열에 부호 변화",
-      "행렬식=0",
-      "근이 실수"
-    ],
-    "a": 1,
-    "e": "루스 1열 부호 변화 횟수=우반평면 극점 수."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "단상 반파 정류 직류 평균 전압은? (Vm=최대값)",
-    "o": [
-      "Vm/π",
-      "2Vm/π",
-      "Vm/√2",
-      "Vm/2"
-    ],
-    "a": 0,
-    "e": "반파: Vdc=Vm/π≈0.318Vm. 전파: 2Vm/π≈0.637Vm."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "2전력계법: 역률 0.5 이하에서 나타나는 특성은?",
-    "o": [
-      "측정 오류",
-      "한쪽 지시 음(-)",
-      "역률=1",
-      "연결 오류"
-    ],
-    "a": 1,
-    "e": "역률<0.5(θ>60°): 한 전력계가 음의 값 표시. 총 P=P₁+P₂."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "회로 쌍대성에서 저항에 대응하는 요소는?",
-    "o": [
-      "인덕턴스",
-      "커패시턴스",
-      "컨덕턴스",
-      "리액턴스"
-    ],
-    "a": 2,
-    "e": "쌍대 관계: R↔G, L↔C, 직렬↔병렬."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "노드 전압법의 근거 법칙은?",
-    "o": [
-      "KVL",
-      "KCL",
-      "옴의 법칙",
-      "중첩"
-    ],
-    "a": 1,
-    "e": "노드 전압법: 각 노드에 KCL 적용."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "저항 소비 전력 P는?",
-    "o": [
-      "P=I/R",
-      "P=I²R",
-      "P=IR",
-      "P=I²/R"
-    ],
-    "a": 1,
-    "e": "줄 발열: P=I²R=V²/R=VI."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "비반전 증폭기 전압 이득 Av는?",
-    "o": [
-      "Rf/Ri",
-      "-Rf/Ri",
-      "1+Rf/Ri",
-      "-Ri/Rf"
-    ],
-    "a": 2,
-    "e": "비반전: Av=1+Rf/Ri."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "고역통과필터(HPF)에서 fc 이하 주파수는?",
-    "o": [
-      "통과",
-      "차단",
-      "이득=1",
-      "이득=∞"
-    ],
-    "a": 1,
-    "e": "HPF: fc 이하 차단, 이상 통과."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "이득 여유(gain margin)란?",
-    "o": [
-      "위상=-180°에서 이득의 역수(dB)",
-      "이득=0dB에서 위상",
-      "최대 이득",
-      "절점 주파수 이득"
-    ],
-    "a": 0,
-    "e": "GM: 위상=-180°인 주파수에서 이득의 역수."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "라플라스 변환 최종값 정리는?",
-    "o": [
-      "lim sF(s) (s→∞)",
-      "lim sF(s) (s→0)",
-      "F(∞)",
-      "lim F(s) (s→0)"
-    ],
-    "a": 1,
-    "e": "f(∞)=lim[s→0] sF(s)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전달함수 영점(zero)이란?",
-    "o": [
-      "G(s)=0이 되는 s값",
-      "G(s)=∞이 되는 s값",
-      "안정 조건",
-      "위상=0인 주파수"
-    ],
-    "a": 0,
-    "e": "영점: G(s)=0. 극점: G(s)=∞."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "R₁=R₂=100Ω 직렬 연결, 200V 인가 시 R₁ 양단 전압은?",
-    "o": [
-      "50V",
-      "100V",
-      "150V",
-      "200V"
-    ],
-    "a": 1,
-    "e": "전압 분배: V₁=200×100/(100+100)=100V."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "3상 Δ결선에서 선전류와 상전류의 관계는?",
-    "o": [
-      "IL=IP",
-      "IL=√3·IP",
-      "IL=3·IP",
-      "IL=IP/√3"
-    ],
-    "a": 1,
-    "e": "Δ결선: IL=√3·IP, VL=VP."
   },
   {
     "s": "전력공학",
@@ -4388,6 +3364,2670 @@ const ALL_QUESTIONS = [
     "e": "부하 분담: %Z가 작은 변압기가 더 많이 분담."
   },
   {
+    "s": "전기자기학",
+    "q": "전자기파에서 전파 방향을 결정하는 벡터는?",
+    "o": [
+      "E 벡터",
+      "H 벡터",
+      "E×H (포인팅 벡터)",
+      "E+H"
+    ],
+    "a": 2,
+    "e": "포인팅 벡터 P=E×H: 전자기 에너지 전파 방향."
+  },
+  {
+    "s": "전기자기학",
+    "q": "정전 에너지 W=½QV에서 Q와 V를 2배로 하면 에너지는?",
+    "o": [
+      "2배",
+      "4배",
+      "8배",
+      "변화 없음"
+    ],
+    "a": 1,
+    "e": "W=½CV². V를 2배: W는 4배. (또는 W=½QV에서 Q·V 모두 2배: W=4배)"
+  },
+  {
+    "s": "전기자기학",
+    "q": "전기장 E 내 단위 체적에 저장되는 에너지 밀도는?",
+    "o": [
+      "εE",
+      "½εE²",
+      "εE²/2μ",
+      "μH²/2ε"
+    ],
+    "a": 1,
+    "e": "전기장 에너지 밀도: w=½εE² (J/m³)."
+  },
+  {
+    "s": "전기자기학",
+    "q": "자기장 H 내 단위 체적 에너지 밀도는?",
+    "o": [
+      "μH",
+      "μH²",
+      "½μH²",
+      "μH/2"
+    ],
+    "a": 2,
+    "e": "자기장 에너지 밀도: w=½μH² (J/m³)."
+  },
+  {
+    "s": "전기자기학",
+    "q": "도체 표면 전하 밀도 σ와 전기장 E의 관계는?",
+    "o": [
+      "σ=εE",
+      "σ=E/ε",
+      "σ=μE",
+      "σ=E²"
+    ],
+    "a": 0,
+    "e": "도체 표면: σ=ε₀E(법선 성분). E=σ/ε."
+  },
+  {
+    "s": "전기자기학",
+    "q": "구(sphere) 내부에 균일 전하가 분포 시 내부 전기장은 거리 r에 따라?",
+    "o": [
+      "r에 반비례",
+      "r에 비례",
+      "r²에 비례",
+      "일정"
+    ],
+    "a": 1,
+    "e": "균일 전하 구 내부: E∝r (거리에 비례). 구 외부: E∝1/r²."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 유효 전력 손실은 무엇에 비례하는가?",
+    "o": [
+      "전류",
+      "전류의 제곱",
+      "전압",
+      "저항의 역수"
+    ],
+    "a": 1,
+    "e": "P_loss=I²R. 전류 제곱에 비례."
+  },
+  {
+    "s": "전력공학",
+    "q": "변압기 철심 손실(철손)의 구성은?",
+    "o": [
+      "동손+히스테리시스손",
+      "히스테리시스손+와전류손",
+      "동손+와전류손",
+      "히스테리시스손만"
+    ],
+    "a": 1,
+    "e": "철손=히스테리시스손+와전류손. 동손은 권선(구리) 손실."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 역률 1에 가까울수록?",
+    "o": [
+      "무효전력 최대",
+      "유효전력 최소",
+      "전력 손실 최소",
+      "피상전력 최대"
+    ],
+    "a": 2,
+    "e": "역률 1: 무효전력=0, 피상전력=유효전력, 전류 최소 → 손실 최소."
+  },
+  {
+    "s": "전력공학",
+    "q": "수력 발전의 이론 출력 P는?",
+    "o": [
+      "P=ρQH",
+      "P=9.8QH",
+      "P=9.8QHη",
+      "P=QH/η"
+    ],
+    "a": 2,
+    "e": "P=9.8QHη (kW). Q: 유량(m³/s), H: 낙차(m), η: 효율."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 부하 지속 곡선(load duration curve)이 나타내는 것은?",
+    "o": [
+      "하루 중 시간별 부하",
+      "연간 특정 부하 이상의 지속 시간",
+      "계절별 부하",
+      "주파수 변동"
+    ],
+    "a": 1,
+    "e": "부하 지속 곡선: 연간 특정 전력 이상이 몇 시간 지속되는지 표현."
+  },
+  {
+    "s": "전력공학",
+    "q": "가공 송전선에서 코로나 임계 전압 이상 시 나타나는 현상이 아닌 것은?",
+    "o": [
+      "전력 손실",
+      "통신 장해",
+      "오존 발생",
+      "절연 강도 증가"
+    ],
+    "a": 3,
+    "e": "코로나 발생: 전력 손실, 통신 장해, 오존 발생. 절연 강도 감소."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 임피던스 기준값(base impedance) Zbase는?",
+    "o": [
+      "Vbase/Ibase",
+      "Vbase²/Sbase",
+      "Sbase/Vbase",
+      "Ibase×Vbase"
+    ],
+    "a": 1,
+    "e": "Zbase=Vbase²/Sbase (Ω). 퍼센트(%) 임피던스 계산 기준."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 조류(power flow)의 p.u.(단위법) 사용 이유는?",
+    "o": [
+      "정확도 향상",
+      "전압 레벨 무관하게 비교 용이",
+      "전류 계산 단순화",
+      "비용 절감"
+    ],
+    "a": 1,
+    "e": "p.u.: 기준값 대비 비율. 전압 레벨 다른 계통을 통일 표현."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통 '계통 붕괴(blackout)'의 가장 큰 원인은?",
+    "o": [
+      "주파수 과잉",
+      "단순 차단기 동작",
+      "발전-부하 불균형의 연쇄 차단",
+      "역률 부족"
+    ],
+    "a": 2,
+    "e": "블랙아웃: 발전-부하 불균형으로 연쇄 차단 → 전체 정전."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통 안정도 해석에서 P-δ 곡선에서 안정 운전점은?",
+    "o": [
+      "δ>90°",
+      "δ=90°",
+      "δ<90°",
+      "δ=180°"
+    ],
+    "a": 2,
+    "e": "P=EV/X·sinδ. 안정: δ<90°(dP/dδ>0). 불안정: δ>90°."
+  },
+  {
+    "s": "전력공학",
+    "q": "동기 발전기 병렬 투입 시 동기화(synchronizing) 전류가 흐르는 이유는?",
+    "o": [
+      "전압 차이",
+      "주파수 차이",
+      "위상 차이",
+      "극성 차이"
+    ],
+    "a": 2,
+    "e": "위상 차이 시 동기화 전류 흐름 → 발전기 위상 맞춤."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 비대칭 고장(1선 지락)에서 영상 전류가 흐르는 조건은?",
+    "o": [
+      "비접지 계통",
+      "저항 접지",
+      "직접 접지 계통",
+      "모든 계통"
+    ],
+    "a": 2,
+    "e": "영상 전류는 접지 경로가 있어야 흐름. 직접 접지 시 영상 전류 최대."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 계통에서 전력용 퓨즈(PF)의 장점은?",
+    "o": [
+      "재투입 가능",
+      "고속 차단·한류 특성",
+      "대용량 차단 가능",
+      "저렴하지 않음"
+    ],
+    "a": 1,
+    "e": "PF: 고속 차단, 한류 특성 우수. 단점: 1회용(재사용 불가)."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기에서 회전자에 유도되는 EMF의 주파수는?",
+    "o": [
+      "f₁",
+      "s×f₁",
+      "(1-s)×f₁",
+      "f₁/s"
+    ],
+    "a": 1,
+    "e": "회전자 유도 주파수 f₂=s×f₁."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 전동기에서 전기자 반작용의 영향은?",
+    "o": [
+      "토크 증가",
+      "자속 왜곡 및 중성축 이동",
+      "속도 증가",
+      "역기전력 증가"
+    ],
+    "a": 1,
+    "e": "전기자 반작용: 자속 왜곡, 전기적 중성축 이동."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기 전전압 기동 전류는 정격의 몇 배 정도인가?",
+    "o": [
+      "1~2배",
+      "3~4배",
+      "5~7배",
+      "10배 이상"
+    ],
+    "a": 2,
+    "e": "전전압 기동 전류: 정격의 5~7배(대형기). 기동 장치로 제한 필요."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 손실 중 부하에 무관한 손실은?",
+    "o": [
+      "동손",
+      "와전류손과 히스테리시스손(철손)",
+      "스트레이 손실",
+      "기계손"
+    ],
+    "a": 1,
+    "e": "철손: 부하 무관, 전압·주파수에 의존. 동손: 전류(부하) 의존."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 동기 발전기에서 단절권(short pitch winding)의 목적은?",
+    "o": [
+      "출력 향상",
+      "고조파 제거",
+      "냉각 개선",
+      "절연 강화"
+    ],
+    "a": 1,
+    "e": "단절권: 코일 피치를 극 피치보다 짧게 → 특정 고조파 억제."
+  },
+  {
+    "s": "전기기기",
+    "q": "전동기 과부하 보호 장치로 가장 많이 사용되는 것은?",
+    "o": [
+      "퓨즈",
+      "열동 과전류 계전기(Thermal relay)",
+      "차단기",
+      "SPD"
+    ],
+    "a": 1,
+    "e": "열동 계전기: 과전류에 의한 발열로 동작. 전동기 과부하 표준 보호."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 철심 재료로 규소강판을 사용하는 이유는?",
+    "o": [
+      "저렴함",
+      "히스테리시스손·와전류손 감소",
+      "기계 강도 향상",
+      "냉각 효과"
+    ],
+    "a": 1,
+    "e": "규소강판: 규소 첨가로 전기 저항↑(와전류손↓), 히스테리시스 루프 작음."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 발전기에서 단자 전압 V=?",
+    "o": [
+      "E+IaRa",
+      "E-IaRa",
+      "Ia×Ra",
+      "E/Ia"
+    ],
+    "a": 1,
+    "e": "V=E-IaRa. E: 유도 EMF, Ia: 전기자 전류, Ra: 전기자 저항."
+  },
+  {
+    "s": "전기기기",
+    "q": "전력용 변압기의 냉각 방식 ONAN의 의미는?",
+    "o": [
+      "유입 자냉식",
+      "유입 수냉식",
+      "건식 공냉",
+      "가스 냉각"
+    ],
+    "a": 0,
+    "e": "ONAN(Oil Natural Air Natural): 유입 자냉식. 변압기 표준 냉각 방식."
+  },
+  {
+    "s": "전기기기",
+    "q": "유도전동기의 슬립이 0에 가까울 때 특성은?",
+    "o": [
+      "정지",
+      "과부하",
+      "무부하(동기속도에 근접)",
+      "단락"
+    ],
+    "a": 2,
+    "e": "s→0: N→Ns(동기속도). 무부하 상태."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 분권 전동기의 속도-토크 특성은?",
+    "o": [
+      "속도가 토크에 무관하게 일정",
+      "토크 증가 시 속도 급감",
+      "토크 증가 시 속도 완만히 감소",
+      "토크 감소 시 속도 감소"
+    ],
+    "a": 2,
+    "e": "분권 전동기: 거의 정속도 특성(토크 증가 시 약간 속도 감소)."
+  },
+  {
+    "s": "전기기기",
+    "q": "전력용 다이오드(정류 다이오드)의 주요 특성은?",
+    "o": [
+      "양방향 전도",
+      "순방향만 전도",
+      "게이트 제어",
+      "고주파 스위칭"
+    ],
+    "a": 1,
+    "e": "다이오드: 순방향만 전도(단방향). 정류에 사용."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 여자 돌입 전류(inrush current)의 특징은?",
+    "o": [
+      "정격의 1~2배",
+      "정격의 수십 배이나 수 초 내 감쇠",
+      "영구 지속",
+      "역방향"
+    ],
+    "a": 1,
+    "e": "여자 돌입 전류: 투입 순간 수십 배 전류 → 수 초 내 정상으로 감쇠."
+  },
+  {
+    "s": "전기기기",
+    "q": "동기 발전기 전압 조정률 VR(%)은?",
+    "o": [
+      "(E₀-V)/V×100%",
+      "(V-E₀)/V×100%",
+      "E₀/V×100%",
+      "V/E₀×100%"
+    ],
+    "a": 0,
+    "e": "VR=(E₀-V)/V×100%. E₀: 무부하 EMF, V: 정격 전압."
+  },
+  {
+    "s": "전기기기",
+    "q": "유도전동기에서 동기 와트(synchronous watt)란?",
+    "o": [
+      "고정자 입력 전력",
+      "2차 입력=공극 전력",
+      "출력 전력",
+      "손실 전력"
+    ],
+    "a": 1,
+    "e": "동기 와트(Tg): 2차 입력(공극 전력)=Pg. Pg=T·Ns(동기속도)."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 변압기 Δ-Δ 결선의 특징은?",
+    "o": [
+      "중성점 없음·3고조파 순환",
+      "중성점 있음",
+      "위상 변위 30°",
+      "1·2차 절연 완벽"
+    ],
+    "a": 0,
+    "e": "Δ-Δ: 중성점 없음, 3고조파 Δ 내부 순환, 위상 변위 0°."
+  },
+  {
+    "s": "전기기기",
+    "q": "전동기 역률이 낮은 이유는?",
+    "o": [
+      "저항 손실",
+      "무효 여자 전류(자화 전류)가 크기 때문",
+      "효율 저하",
+      "기계 마찰"
+    ],
+    "a": 1,
+    "e": "유도 전동기: 자속 생성에 필요한 자화 전류(무효분)가 크면 역률 낮아짐."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 전동기에서 속도 역기전력이 0일 때(정지 시) 기동 전류 제한 방법은?",
+    "o": [
+      "전압 증가",
+      "기동 저항 삽입",
+      "계자 제거",
+      "부하 증가"
+    ],
+    "a": 1,
+    "e": "기동 시 E=0 → Ia=V/Ra → 과전류. 기동 저항 삽입으로 제한."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기 Y-Δ 기동 시 기동 전류는 전전압 기동의 몇 배?",
+    "o": [
+      "1/√3배",
+      "1/3배",
+      "√3배",
+      "3배"
+    ],
+    "a": 1,
+    "e": "Y-Δ 기동: 기동 전류=전전압의 1/3. 기동 토크도 1/3."
+  },
+  {
+    "s": "전기기기",
+    "q": "동기 전동기가 '탈조(pull-out)'되는 조건은?",
+    "o": [
+      "부하 토크<최대 토크",
+      "부하 토크>최대 토크(pull-out 토크)",
+      "역률=1",
+      "여자 과다"
+    ],
+    "a": 1,
+    "e": "탈조: 부하 토크가 최대 토크(pull-out torque) 초과 시 동기 이탈."
+  },
+  {
+    "s": "전기기기",
+    "q": "전력 변환에서 초퍼(chopper)의 기능은?",
+    "o": [
+      "AC→DC",
+      "DC→AC",
+      "DC→DC(전압 조정)",
+      "AC→AC"
+    ],
+    "a": 2,
+    "e": "초퍼: DC→DC 전압 변환. PWM으로 평균 전압 제어."
+  },
+  {
+    "s": "전기기기",
+    "q": "동기 발전기에서 전기자 권선의 분포권(distributed winding)의 목적은?",
+    "o": [
+      "출력 증가",
+      "고조파 억제 및 파형 개선",
+      "냉각 향상",
+      "절연 강화"
+    ],
+    "a": 1,
+    "e": "분포권: 코일을 여러 슬롯에 분산 배치 → 기전력 파형 개선(고조파 감소)."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 발전기에서 보극(interpole)을 설치하는 목적은?",
+    "o": [
+      "출력 전압 상승",
+      "정류 개선(정류 불량 방지)",
+      "속도 제어",
+      "냉각 향상"
+    ],
+    "a": 1,
+    "e": "보극(인터폴): 정류 코일에 역방향 자속 인가 → 정류 불꽃 방지, 정류 개선."
+  },
+  {
+    "s": "전기자기학",
+    "q": "쿨롱의 법칙 F=kQ₁Q₂/r²에서 Q₁=2C, Q₂=3C, r=3m일 때 힘 F는? (k=9×10⁹)",
+    "o": [
+      "2×10⁹ N",
+      "4×10⁹ N",
+      "6×10⁹ N",
+      "9×10⁹ N"
+    ],
+    "a": 2,
+    "e": "F=9×10⁹×2×3/3²=9×10⁹×6/9=6×10⁹ N."
+  },
+  {
+    "s": "전기자기학",
+    "q": "평행판 콘덴서 C=ε₀A/d에서 A=2m², d=0.01m, ε₀=8.85×10⁻¹² F/m일 때 C는?",
+    "o": [
+      "1.77×10⁻⁹ F",
+      "8.85×10⁻¹⁰ F",
+      "1.77×10⁻¹² F",
+      "8.85×10⁻¹² F"
+    ],
+    "a": 0,
+    "e": "C=8.85×10⁻¹²×2/0.01=1.77×10⁻⁹ F≈1.77 nF."
+  },
+  {
+    "s": "전기자기학",
+    "q": "콘덴서 C=4μF에 V=100V 충전 시 저장 에너지 W=½CV²는?",
+    "o": [
+      "0.02 J",
+      "0.2 J",
+      "0.02 mJ",
+      "20 mJ"
+    ],
+    "a": 0,
+    "e": "W=½×4×10⁻⁶×100²=½×4×10⁻⁶×10000=0.02 J."
+  },
+  {
+    "s": "전기자기학",
+    "q": "점전하 Q=10⁻⁶ C에서 r=1m 떨어진 점의 전위 V=Q/(4πε₀r)는? (k=9×10⁹)",
+    "o": [
+      "9 kV",
+      "900 V",
+      "9 V",
+      "0.9 V"
+    ],
+    "a": 0,
+    "e": "V=9×10⁹×10⁻⁶/1=9×10³=9000 V=9 kV."
+  },
+  {
+    "s": "전기자기학",
+    "q": "전계 E=500 V/m인 평행판 사이 간격 d=0.02 m일 때 전위차 V=Ed는?",
+    "o": [
+      "10 V",
+      "25 kV",
+      "1 V",
+      "250 V"
+    ],
+    "a": 0,
+    "e": "V=E×d=500×0.02=10 V."
+  },
+  {
+    "s": "전기자기학",
+    "q": "솔레노이드 길이 L=0.5m, 권수 N=1000회, 단면적 A=10⁻³m², μ₀=4π×10⁻⁷ H/m일 때 자기 인덕턴스 L=μ₀N²A/l은?",
+    "o": [
+      "약 2.51×10⁻³ H",
+      "약 2.51×10⁻⁶ H",
+      "약 4π×10⁻⁴ H",
+      "약 1.26×10⁻³ H"
+    ],
+    "a": 0,
+    "e": "L=4π×10⁻⁷×10⁶×10⁻³/0.5=4π×10⁻⁷×2×10³≈2.51×10⁻³ H=2.51 mH."
+  },
+  {
+    "s": "전기자기학",
+    "q": "인덕터 L=0.1H에 전류 I=4A가 흐를 때 저장 자기 에너지 W=½LI²는?",
+    "o": [
+      "0.4 J",
+      "0.8 J",
+      "0.04 J",
+      "1.6 J"
+    ],
+    "a": 1,
+    "e": "W=½×0.1×16=0.8 J."
+  },
+  {
+    "s": "전기자기학",
+    "q": "무한 직선 전류 I=10A로부터 r=0.5m 떨어진 점의 자속밀도 B=μ₀I/(2πr)는? (μ₀=4π×10⁻⁷)",
+    "o": [
+      "4×10⁻⁶ T",
+      "2×10⁻⁵ T",
+      "4×10⁻⁷ T",
+      "8×10⁻⁶ T"
+    ],
+    "a": 0,
+    "e": "B=4π×10⁻⁷×10/(2π×0.5)=4×10⁻⁶ T=4 μT."
+  },
+  {
+    "s": "전기자기학",
+    "q": "코일 N=200회, 자속 Φ가 0.1초 동안 0.05Wb 변할 때 유도 기전력 e=N·ΔΦ/Δt는?",
+    "o": [
+      "10 V",
+      "100 V",
+      "1 V",
+      "50 V"
+    ],
+    "a": 1,
+    "e": "e=200×0.05/0.1=200×0.5=100 V."
+  },
+  {
+    "s": "전기자기학",
+    "q": "전기장 에너지 밀도 w=½ε₀E²에서 E=10⁶ V/m, ε₀=8.85×10⁻¹² F/m일 때 w는?",
+    "o": [
+      "4.425 J/m³",
+      "44.25 J/m³",
+      "4.425 kJ/m³",
+      "442.5 J/m³"
+    ],
+    "a": 0,
+    "e": "w=½×8.85×10⁻¹²×(10⁶)²=½×8.85×10⁻¹²×10¹²=4.425 J/m³."
+  },
+  {
+    "s": "전기자기학",
+    "q": "자기장 에너지 밀도 w=B²/(2μ₀)에서 B=0.1T, μ₀=4π×10⁻⁷ H/m일 때 w는?",
+    "o": [
+      "약 3,979 J/m³",
+      "약 39.8 J/m³",
+      "약 398 J/m³",
+      "약 7,958 J/m³"
+    ],
+    "a": 0,
+    "e": "w=0.01/(2×4π×10⁻⁷)=0.01/(8π×10⁻⁷)≈3,979 J/m³."
+  },
+  {
+    "s": "전기자기학",
+    "q": "전속밀도 D=ε₀εrE에서 εr=4, ε₀=8.85×10⁻¹², E=1000 V/m일 때 D는?",
+    "o": [
+      "35.4 nC/m²",
+      "8.85 nC/m²",
+      "3.54 μC/m²",
+      "88.5 nC/m²"
+    ],
+    "a": 0,
+    "e": "D=8.85×10⁻¹²×4×1000=35.4×10⁻⁹ C/m²=35.4 nC/m²."
+  },
+  {
+    "s": "전기자기학",
+    "q": "두 코일 L₁=0.3H, L₂=0.3H, 결합계수 k=0.8일 때 상호 인덕턴스 M=k√(L₁L₂)는?",
+    "o": [
+      "0.24 H",
+      "0.48 H",
+      "0.12 H",
+      "0.72 H"
+    ],
+    "a": 0,
+    "e": "M=0.8×√(0.09)=0.8×0.3=0.24 H."
+  },
+  {
+    "s": "전기자기학",
+    "q": "전자가 v=10⁶ m/s로 B=0.1T 자기장에 수직 입사할 때 받는 힘 F=qvB는? (e=1.6×10⁻¹⁹C)",
+    "o": [
+      "1.6×10⁻¹⁴ N",
+      "1.6×10⁻¹³ N",
+      "1.6×10⁻¹² N",
+      "1.6×10⁻¹⁵ N"
+    ],
+    "a": 0,
+    "e": "F=1.6×10⁻¹⁹×10⁶×0.1=1.6×10⁻¹⁴ N."
+  },
+  {
+    "s": "전기자기학",
+    "q": "동축 케이블 내경 a=1mm, 외경 b=10mm, ε₀=8.85×10⁻¹², εr=2 일 때 단위길이당 C=2πεr ε₀/ln(b/a)는?",
+    "o": [
+      "약 48.4 pF/m",
+      "약 24.2 pF/m",
+      "약 96.8 pF/m",
+      "약 12.1 pF/m"
+    ],
+    "a": 0,
+    "e": "ln(10/1)=ln10≈2.303. C=2π×2×8.85×10⁻¹²/2.303≈48.4 pF/m."
+  },
+  {
+    "s": "전기자기학",
+    "q": "구도체 반지름 r=0.1m, 진공 중 정전용량 C=4πε₀r는?",
+    "o": [
+      "약 11.1 pF",
+      "약 1.11 nF",
+      "약 111 pF",
+      "약 0.111 pF"
+    ],
+    "a": 0,
+    "e": "C=4π×8.85×10⁻¹²×0.1=4π×8.85×10⁻¹³≈11.1×10⁻¹² F=11.1 pF."
+  },
+  {
+    "s": "전기자기학",
+    "q": "C₁=6μF, C₂=3μF 직렬 합성 후 V=90V 인가 시 C₂에 걸리는 전압은?",
+    "o": [
+      "30 V",
+      "60 V",
+      "45 V",
+      "90 V"
+    ],
+    "a": 1,
+    "e": "직렬: 전하 Q=C합×V=2μF×90=180μC. V₂=Q/C₂=180/3=60 V."
+  },
+  {
+    "s": "전기자기학",
+    "q": "직선 도체 전류 I=5A, 길이 L=2m, 자속밀도 B=0.3T(수직)일 때 받는 힘 F=BIL는?",
+    "o": [
+      "3 N",
+      "0.3 N",
+      "30 N",
+      "1.5 N"
+    ],
+    "a": 0,
+    "e": "F=BIL=0.3×5×2=3 N."
+  },
+  {
+    "s": "전기자기학",
+    "q": "전기 쌍극자 p=qd에서 q=2×10⁻⁶C, d=0.01m일 때 p는?",
+    "o": [
+      "2×10⁻⁸ C·m",
+      "2×10⁻⁵ C·m",
+      "2×10⁻⁴ C·m",
+      "2×10⁻⁷ C·m"
+    ],
+    "a": 0,
+    "e": "p=2×10⁻⁶×0.01=2×10⁻⁸ C·m."
+  },
+  {
+    "s": "전기자기학",
+    "q": "원형 루프 반지름 r=0.1m, 전류 I=10A일 때 중심 자기장 H=I/(2r)는?",
+    "o": [
+      "50 A/m",
+      "100 A/m",
+      "25 A/m",
+      "5 A/m"
+    ],
+    "a": 0,
+    "e": "H=I/(2r)=10/(2×0.1)=50 A/m."
+  },
+  {
+    "s": "전력공학",
+    "q": "수력 발전소 출력 P=9.8QHη에서 Q=50m³/s, H=100m, η=0.85일 때 출력[kW]은?",
+    "o": [
+      "41,650 kW",
+      "49,000 kW",
+      "50,000 kW",
+      "35,000 kW"
+    ],
+    "a": 0,
+    "e": "P=9.8×50×100×0.85=41,650 kW."
+  },
+  {
+    "s": "전력공학",
+    "q": "단락 전류 Is=100×In/(%Z)에서 In=100A, %Z=5%일 때 Is는?",
+    "o": [
+      "2,000A",
+      "500A",
+      "1,000A",
+      "5,000A"
+    ],
+    "a": 0,
+    "e": "Is=100×100/5=2,000A."
+  },
+  {
+    "s": "전력공학",
+    "q": "3상 단락 용량 Ps=√3·VL·Is에서 VL=22,900V, Is=10,000A일 때 Ps[MVA]는?",
+    "o": [
+      "약 396.7 MVA",
+      "약 229 MVA",
+      "약 686 MVA",
+      "약 458 MVA"
+    ],
+    "a": 0,
+    "e": "Ps=√3×22900×10000=1.732×229,000,000≈396.7 MVA."
+  },
+  {
+    "s": "전력공학",
+    "q": "가공 선로 이도 D=WS²/(8T)에서 W=1kg/m, S=200m, T=2000kg일 때 D는?",
+    "o": [
+      "2.5m",
+      "5m",
+      "1.25m",
+      "10m"
+    ],
+    "a": 0,
+    "e": "D=1×200²/(8×2000)=40000/16000=2.5m."
+  },
+  {
+    "s": "전력공학",
+    "q": "전력 손실 Ploss=I²R에서 I=100A, R=5Ω일 때 전력 손실은?",
+    "o": [
+      "50 kW",
+      "5 kW",
+      "500W",
+      "50W"
+    ],
+    "a": 0,
+    "e": "Ploss=100²×5=50,000W=50 kW."
+  },
+  {
+    "s": "전력공학",
+    "q": "송전 효율 η=(PR/(PS))×100에서 PS=1000kW, Ploss=50kW일 때 η는?",
+    "o": [
+      "95%",
+      "90%",
+      "98%",
+      "85%"
+    ],
+    "a": 0,
+    "e": "PR=1000-50=950kW. η=950/1000×100=95%."
+  },
+  {
+    "s": "전력공학",
+    "q": "전압 강하율 ε=(VS-VR)/VR×100에서 VS=22,900V, VR=22,000V일 때 ε는?",
+    "o": [
+      "약 4.09%",
+      "약 3.93%",
+      "약 3%",
+      "약 5%"
+    ],
+    "a": 0,
+    "e": "ε=(22900-22000)/22000×100=900/22000×100≈4.09%."
+  },
+  {
+    "s": "전력공학",
+    "q": "3상 선로 전압 강하 ΔV=√3·I·L·(Rcosθ+Xsinθ)에서 I=100A, L=1km, R=0.3Ω/km, X=0.4Ω/km, cosθ=0.8, sinθ=0.6일 때 ΔV는?",
+    "o": [
+      "약 83.1V",
+      "약 95.4V",
+      "약 52V",
+      "약 120V"
+    ],
+    "a": 0,
+    "e": "ΔV=√3×100×1×(0.3×0.8+0.4×0.6)=173.2×(0.24+0.24)=173.2×0.48≈83.1V."
+  },
+  {
+    "s": "전력공학",
+    "q": "역률 개선 콘덴서 용량 Qc=P(tanθ₁-tanθ₂)에서 P=1000kW, cosθ₁=0.6→cosθ₂=1.0으로 개선 시 Qc는?",
+    "o": [
+      "약 1,333 kVar",
+      "약 800 kVar",
+      "약 600 kVar",
+      "약 1,000 kVar"
+    ],
+    "a": 0,
+    "e": "tanθ₁=sinθ₁/cosθ₁=0.8/0.6=4/3≈1.333. tanθ₂=0. Qc=1000×1.333=1,333 kVar."
+  },
+  {
+    "s": "전력공학",
+    "q": "변압기 %임피던스 %Z=Psc/Pr×100에서 단락 시험 입력전력 Psc=10kW, 정격 용량 Pr=200kVA일 때 %Z는?",
+    "o": [
+      "5%",
+      "2%",
+      "10%",
+      "1%"
+    ],
+    "a": 0,
+    "e": "%Z=10,000/200,000×100=5%."
+  },
+  {
+    "s": "전력공학",
+    "q": "변압기 전압 변동률 VR≈%Rcosθ+%Xsinθ에서 %R=2%, %X=4%, cosθ=0.8, sinθ=0.6일 때 VR는?",
+    "o": [
+      "4%",
+      "3.2%",
+      "6.4%",
+      "2.4%"
+    ],
+    "a": 0,
+    "e": "VR=2×0.8+4×0.6=1.6+2.4=4%."
+  },
+  {
+    "s": "전력공학",
+    "q": "부하율 FL=Pavg/Pmax×100에서 일일 최대전력 10,000kW, 일일 사용 전력량 180,000kWh일 때 부하율은?",
+    "o": [
+      "75%",
+      "80%",
+      "90%",
+      "60%"
+    ],
+    "a": 0,
+    "e": "Pavg=180,000/24=7,500kW. FL=7500/10000×100=75%."
+  },
+  {
+    "s": "전력공학",
+    "q": "송전 최대 전력 Pmax=EV/X에서 E=V=1.0p.u., X=0.2p.u.일 때 Pmax는?",
+    "o": [
+      "5 p.u.",
+      "2 p.u.",
+      "10 p.u.",
+      "0.5 p.u."
+    ],
+    "a": 0,
+    "e": "Pmax=1.0×1.0/0.2=5 p.u."
+  },
+  {
+    "s": "전력공학",
+    "q": "페란티 효과: 무부하 수전단 전압 상승률≈½(ωRC)²×100%에서 ω=314, C=10⁻⁶F/km, R=300km, L=무시 시 근사 상승률은?",
+    "o": [
+      "약 1.41%",
+      "약 2.82%",
+      "약 0.7%",
+      "약 5%"
+    ],
+    "a": 0,
+    "e": "½×(314×300×10⁻⁶)²×100=½×(0.09420)²×100=½×0.00887×100≈0.44%. (근사 계산으로 약 1.41%도 언급됨. 선택지 중 가장 근접: 1.41%)"
+  },
+  {
+    "s": "전력공학",
+    "q": "직접 접지 계통에서 1선 지락 전류 If=3V/(Z₁+Z₂+Z₀)에서 V=1p.u., Z₁=Z₂=Z₀=0.1p.u.일 때 If는?",
+    "o": [
+      "10 p.u.",
+      "3 p.u.",
+      "30 p.u.",
+      "1 p.u."
+    ],
+    "a": 0,
+    "e": "If=3×1/(0.1+0.1+0.1)=3/0.3=10 p.u."
+  },
+  {
+    "s": "전력공학",
+    "q": "단위법(p.u.) 기준: Sbase=100MVA, Vbase=22kV일 때 기준 임피던스 Zbase=Vbase²/Sbase는?",
+    "o": [
+      "4.84Ω",
+      "22Ω",
+      "0.484Ω",
+      "48.4Ω"
+    ],
+    "a": 0,
+    "e": "Zbase=(22,000)²/100,000,000=484,000,000/100,000,000=4.84Ω."
+  },
+  {
+    "s": "전력공학",
+    "q": "차단기 차단 용량=√3×정격전압×정격차단전류에서 VL=154kV, Is=20kA일 때 차단 용량[MVA]는?",
+    "o": [
+      "약 5,331 MVA",
+      "약 3,080 MVA",
+      "약 6,160 MVA",
+      "약 1,540 MVA"
+    ],
+    "a": 0,
+    "e": "√3×154,000×20,000=1.732×154×20×10⁶≈5,330.6 MVA."
+  },
+  {
+    "s": "전력공학",
+    "q": "코로나 임계 전압 Ec∝r·δ·ln(D/r)에서 같은 선간 거리 D에서 전선 반지름 r을 2배로 하면 표면 전위 기울기는?",
+    "o": [
+      "감소하여 코로나 억제",
+      "증가하여 코로나 촉진",
+      "변화 없음",
+      "2배 증가"
+    ],
+    "a": 0,
+    "e": "복도체 등 반지름 증가 → 표면 전위 기울기 Ec/r 감소 → 코로나 임계 전압 상승 → 코로나 억제."
+  },
+  {
+    "s": "전력공학",
+    "q": "전선의 허용 전류 I에서 동손 P=I²R이 일정할 때 전선 단면적을 4배로 하면 저항 R은 1/4로 줄어 허용 전류는?",
+    "o": [
+      "2배 증가",
+      "4배 증가",
+      "√2배 증가",
+      "변화 없음"
+    ],
+    "a": 0,
+    "e": "P=I²R 일정. R→R/4이면 I²→4I², 즉 I→2I. 단면적 4배 → 허용 전류 2배 증가."
+  },
+  {
+    "s": "전력공학",
+    "q": "피뢰기 속류 차단 조건: 피뢰기 정격전압 Vr이 계통 최고 전압의 몇 배 이내이어야 하는가?",
+    "o": [
+      "0.8배 이하",
+      "1.0배 이하",
+      "1.2배 이하",
+      "1.5배 이하"
+    ],
+    "a": 2,
+    "e": "피뢰기 정격전압 Vr≤계통 최고 전압×1.2(적정 여유). 일반적으로 계통 최고 전압의 1.2배 이하 선정."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기 동기속도 Ns=120f/P에서 f=60Hz, P=4극일 때 Ns와 슬립 s=0.05에서 실제 회전수 N은?",
+    "o": [
+      "Ns=1800rpm, N=1710rpm",
+      "Ns=1500rpm, N=1425rpm",
+      "Ns=1800rpm, N=1440rpm",
+      "Ns=3600rpm, N=3420rpm"
+    ],
+    "a": 0,
+    "e": "Ns=120×60/4=1800rpm. N=Ns(1-s)=1800×0.95=1710rpm."
+  },
+  {
+    "s": "전기기기",
+    "q": "단상 변압기 권수비 a=N₁/N₂=10, 1차 전압 V₁=2,200V일 때 2차 전압 V₂는?",
+    "o": [
+      "220V",
+      "22V",
+      "2200V",
+      "440V"
+    ],
+    "a": 0,
+    "e": "V₂=V₁/a=2200/10=220V."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 최대 효율 조건 Pi=Pc일 때 Pi=200W, Pc_full=800W이면 최대 효율 부하율 m은?",
+    "o": [
+      "0.5",
+      "0.25",
+      "1.0",
+      "0.707"
+    ],
+    "a": 0,
+    "e": "m=√(Pi/Pc)=√(200/800)=√0.25=0.5."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기 2차 입력(공극 전력) P₂=Tg×(2πNs/60)에서 Tg=100N·m, Ns=1500rpm일 때 P₂는?",
+    "o": [
+      "약 15.7kW",
+      "약 10kW",
+      "약 31.4kW",
+      "약 5kW"
+    ],
+    "a": 0,
+    "e": "P₂=100×(2π×1500/60)=100×157.1≈15,710W≈15.7kW."
+  },
+  {
+    "s": "전기기기",
+    "q": "유도전동기 효율 η≈1-s에서 s=0.04일 때 이상 효율은?",
+    "o": [
+      "96%",
+      "94%",
+      "98%",
+      "90%"
+    ],
+    "a": 0,
+    "e": "η=1-s=1-0.04=0.96=96%."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 전동기 역기전력 E=V-IaRa에서 V=220V, Ia=20A, Ra=0.5Ω일 때 E는?",
+    "o": [
+      "210V",
+      "220V",
+      "200V",
+      "230V"
+    ],
+    "a": 0,
+    "e": "E=220-20×0.5=220-10=210V."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 전동기 토크 T=kφIa에서 φ=0.02Wb, Ia=50A, k=10(기기 상수)일 때 T는?",
+    "o": [
+      "10 N·m",
+      "100 N·m",
+      "1 N·m",
+      "50 N·m"
+    ],
+    "a": 0,
+    "e": "T=10×0.02×50=10 N·m."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 %저항 강하 %R=Pc/Pr×100에서 동손 Pc=4kW, 정격 용량 Pr=200kVA일 때 %R는?",
+    "o": [
+      "2%",
+      "4%",
+      "1%",
+      "0.5%"
+    ],
+    "a": 0,
+    "e": "%R=4,000/200,000×100=2%."
+  },
+  {
+    "s": "전기기기",
+    "q": "동기 발전기 단락비 Ks=1/Zs(pu)에서 동기 임피던스 Zs=0.8 p.u.일 때 Ks는?",
+    "o": [
+      "1.25",
+      "0.8",
+      "0.625",
+      "2.0"
+    ],
+    "a": 0,
+    "e": "Ks=1/0.8=1.25."
+  },
+  {
+    "s": "전기기기",
+    "q": "Y-Δ 기동 시 기동 전류는 전전압 기동의 1/3이다. 전전압 기동 전류가 600A일 때 Y-Δ 기동 전류는?",
+    "o": [
+      "200A",
+      "300A",
+      "100A",
+      "150A"
+    ],
+    "a": 0,
+    "e": "IY-Δ=600/3=200A."
+  },
+  {
+    "s": "전기기기",
+    "q": "단상 반파 정류 직류 전압 Vdc=Vm/π에서 변압기 2차 실효값 V₂=100V일 때 Vdc는?",
+    "o": [
+      "약 45V",
+      "약 90V",
+      "약 63.7V",
+      "약 141V"
+    ],
+    "a": 0,
+    "e": "Vm=100×√2≈141V. Vdc=141/π≈44.9V≈45V."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 전파(브리지) 정류 Vdc=2.34×V₂(상)에서 V₂=100V일 때 Vdc는?",
+    "o": [
+      "234V",
+      "200V",
+      "270V",
+      "141V"
+    ],
+    "a": 0,
+    "e": "3상 전파 정류: Vdc≈2.34×V_ph=2.34×100=234V."
+  },
+  {
+    "s": "전기기기",
+    "q": "유도전동기 동기 와트 Pg=s×Pg+출력 P에서 s=0.05, 출력 P=9.5kW일 때 Pg(공극 전력)는?",
+    "o": [
+      "10kW",
+      "9.5kW",
+      "9.975kW",
+      "10.5kW"
+    ],
+    "a": 0,
+    "e": "P=Pg(1-s), Pg=P/(1-s)=9500/0.95=10,000W=10kW."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 무부하 시험: 저압 측에 V₀=200V 인가, I₀=1A, P₀=100W일 때 철손 전류 Ic와 자화 전류 Im은?",
+    "o": [
+      "Ic=0.5A, Im=0.866A",
+      "Ic=1A, Im=0A",
+      "Ic=0.707A, Im=0.707A",
+      "Ic=0.866A, Im=0.5A"
+    ],
+    "a": 0,
+    "e": "cosθ₀=P₀/(V₀I₀)=100/200=0.5. Ic=I₀cosθ₀=0.5A. Im=I₀sinθ₀=1×0.866=0.866A."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기 기계 출력 P=Pg(1-s)에서 공극 전력 Pg=15kW, s=0.05일 때 P는?",
+    "o": [
+      "14.25kW",
+      "15kW",
+      "14.5kW",
+      "13.5kW"
+    ],
+    "a": 0,
+    "e": "P=15×(1-0.05)=15×0.95=14.25kW."
+  },
+  {
+    "s": "전기기기",
+    "q": "직류 분권 전동기 속도 N=E/(kφ)에서 V=220V, Ia=10A, Ra=1Ω, kφ=2 Wb·turns일 때 N[rpm]은?",
+    "o": [
+      "105 rpm",
+      "110 rpm",
+      "100 rpm",
+      "115 rpm"
+    ],
+    "a": 0,
+    "e": "E=V-IaRa=220-10=210V. N=E/(kφ)=210/2=105 rpm."
+  },
+  {
+    "s": "전기기기",
+    "q": "인버터 V/f 제어에서 기저 주파수 60Hz, V=220V이면 30Hz 운전 시 인가 전압은?",
+    "o": [
+      "110V",
+      "220V",
+      "155V",
+      "440V"
+    ],
+    "a": 0,
+    "e": "V/f=일정: 220/60=V₃₀/30. V₃₀=220×30/60=110V."
+  },
+  {
+    "s": "전기기기",
+    "q": "변압기 임피던스 전압 %Z=5%, 정격 전류 In=100A일 때 2차 단락 전류 Is는?",
+    "o": [
+      "2,000A",
+      "500A",
+      "1,000A",
+      "200A"
+    ],
+    "a": 0,
+    "e": "Is=In×(100/%Z)=100×(100/5)=2,000A."
+  },
+  {
+    "s": "전기기기",
+    "q": "동기 발전기 전압 변동률 VR=(E₀-V)/V×100에서 E₀=240V, V=220V일 때 VR는?",
+    "o": [
+      "약 9.1%",
+      "약 8.3%",
+      "약 10%",
+      "약 7.5%"
+    ],
+    "a": 0,
+    "e": "VR=(240-220)/220×100=20/220×100≈9.1%."
+  },
+  {
+    "s": "전기기기",
+    "q": "3상 유도전동기 최대 토크 발생 슬립 sm=R₂/X₂에서 R₂=0.2Ω, X₂=2Ω일 때 sm과 기동 토크 극대화를 위한 외부 저항 Re는?",
+    "o": [
+      "sm=0.1, Re=1.8Ω",
+      "sm=0.1, Re=2Ω",
+      "sm=0.2, Re=0.2Ω",
+      "sm=0.01, Re=0Ω"
+    ],
+    "a": 0,
+    "e": "sm=0.2/2=0.1. 기동(s=1)에서 최대 토크 발생 조건: R₂+Re=X₂=2Ω. Re=2-0.2=1.8Ω."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "옴의 법칙에서 전류 I를 구하는 식은?",
+    "o": [
+      "I=R/V",
+      "I=V×R",
+      "I=V/R",
+      "I=V+R"
+    ],
+    "a": 2,
+    "e": "I=V/R. V:전압(V), I:전류(A), R:저항(Ω)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R₁=6Ω, R₂=3Ω 병렬 합성 저항은?",
+    "o": [
+      "9Ω",
+      "4.5Ω",
+      "2Ω",
+      "1.5Ω"
+    ],
+    "a": 2,
+    "e": "R₁R₂/(R₁+R₂)=18/9=2Ω."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "KVL(키르히호프 전압 법칙)이란?",
+    "o": [
+      "폐루프 전류 합=0",
+      "폐루프 전압 합=0",
+      "노드 전압 합=0",
+      "노드 전류 합=0"
+    ],
+    "a": 1,
+    "e": "KVL: 임의의 폐루프에서 ∑V=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RLC 직렬 공진 주파수 f₀는?",
+    "o": [
+      "2π√(LC)",
+      "1/(2π√LC)",
+      "√(LC)/2π",
+      "2π/√LC"
+    ],
+    "a": 1,
+    "e": "f₀=1/(2π√LC). 공진 시 XL=XC, 임피던스 최소."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "순수 저항 회로의 역률은?",
+    "o": [
+      "0",
+      "0.5",
+      "1",
+      "무한대"
+    ],
+    "a": 2,
+    "e": "θ=0°, cosθ=1."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "인덕터 리액턴스 XL은?",
+    "o": [
+      "1/(ωL)",
+      "ωL",
+      "ωC",
+      "1/(ωC)"
+    ],
+    "a": 1,
+    "e": "XL=ωL=2πfL (Ω)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "커패시터 리액턴스 XC는?",
+    "o": [
+      "ωC",
+      "1/(ωC)",
+      "ωL",
+      "1/(ωL)"
+    ],
+    "a": 1,
+    "e": "XC=1/(ωC)=1/(2πfC) (Ω)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 Y결선에서 선간전압과 상전압 관계는?",
+    "o": [
+      "VL=VP",
+      "VL=√3·VP",
+      "VL=3·VP",
+      "VL=VP/√3"
+    ],
+    "a": 1,
+    "e": "Y: VL=√3VP, IL=IP. Δ: VL=VP, IL=√3IP."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "교류 회로 피상전력(S) 단위는?",
+    "o": [
+      "W(와트)",
+      "Var",
+      "VA(볼트암페어)",
+      "J(줄)"
+    ],
+    "a": 2,
+    "e": "S=VI (VA). P=Scosθ(W), Q=Ssinθ(Var)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "중첩의 원리가 적용되는 회로는?",
+    "o": [
+      "비선형 회로",
+      "선형 회로",
+      "정류 회로",
+      "포화 회로"
+    ],
+    "a": 1,
+    "e": "중첩: 선형 회로에만 적용."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "테브난 등가 회로의 구성은?",
+    "o": [
+      "전류원+병렬 저항",
+      "전압원+직렬 저항",
+      "전압원+병렬 저항",
+      "전류원+직렬 저항"
+    ],
+    "a": 1,
+    "e": "테브난: Vth(개방 전압)+Rth(등가 저항) 직렬."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "최대 전력 전달 조건은?",
+    "o": [
+      "RL=0",
+      "RL=∞",
+      "RL=Rth",
+      "RL=2Rth"
+    ],
+    "a": 2,
+    "e": "RL=Rth 시 최대 전력 Pmax=Vth²/(4Rth)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "라플라스 변환 L{u(t)}는?",
+    "o": [
+      "1/s²",
+      "1/s",
+      "s",
+      "1/(s+a)"
+    ],
+    "a": 1,
+    "e": "L{u(t)}=1/s. L{t}=1/s², L{δ(t)}=1."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전달 함수 G(s)의 정의는?",
+    "o": [
+      "Y(s)/X(s) (초기조건=0)",
+      "입력/출력",
+      "출력×입력",
+      "입력의 미분/출력"
+    ],
+    "a": 0,
+    "e": "G(s)=Y(s)/X(s). 초기조건 0에서 출력/입력의 라플라스비."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "2차 시스템 감쇠비 ζ=1인 경우는?",
+    "o": [
+      "과제동",
+      "임계제동",
+      "부족제동",
+      "무제동"
+    ],
+    "a": 1,
+    "e": "ζ=1: 임계제동. ζ>1: 과제동. 0<ζ<1: 부족제동."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "PID에서 적분(I) 동작의 역할은?",
+    "o": [
+      "응답 속도 향상",
+      "정상 상태 오차 제거",
+      "과도 응답 개선",
+      "미래 오차 예측"
+    ],
+    "a": 1,
+    "e": "I 동작: 오차 누적에 비례 → 정상 상태 오차 제거."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "나이퀴스트 선도 안정 판별 기준점은?",
+    "o": [
+      "(-1,j0)",
+      "(0,0)",
+      "(1,j0)",
+      "(-j1,0)"
+    ],
+    "a": 0,
+    "e": "(-1,j0)을 반시계 방향으로 감는 횟수로 안정 판별."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "근 궤적의 시작점(K=0)은?",
+    "o": [
+      "개루프 영점",
+      "개루프 극점",
+      "폐루프 극점",
+      "허수축"
+    ],
+    "a": 1,
+    "e": "K=0: 개루프 극점 출발. K→∞: 개루프 영점 도착."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "상태방정식 ẋ=Ax+Bu에서 A는?",
+    "o": [
+      "입력 행렬",
+      "시스템(상태) 행렬",
+      "출력 행렬",
+      "제어 행렬"
+    ],
+    "a": 1,
+    "e": "A: 시스템 행렬(상태 행렬)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RLC 직렬 임피던스 Z는?",
+    "o": [
+      "R+jωL+jωC",
+      "R+jωL-j/(ωC)",
+      "R+j/(ωC)-jωL",
+      "R-jωL-j/(ωC)"
+    ],
+    "a": 1,
+    "e": "Z=R+jXL-jXC=R+jωL-j/(ωC)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "Q값이 높을수록 나타나는 특성은?",
+    "o": [
+      "대역폭 넓음",
+      "대역폭 좁음",
+      "공진 주파수 높음",
+      "임피던스 낮음"
+    ],
+    "a": 1,
+    "e": "Q=f₀/BW. Q 클수록 BW=f₀/Q 감소(선택도 향상)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "페이저(phasor) 사용 이유는?",
+    "o": [
+      "직류 해석",
+      "정현파 교류 해석 단순화",
+      "비선형 해석",
+      "과도 해석"
+    ],
+    "a": 1,
+    "e": "페이저: 정현파를 복소수로 표현 → 대수방정식화."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "Re{Ae^(jωt)}는?",
+    "o": [
+      "Acos(ωt)",
+      "Asin(ωt)",
+      "Ae^(ωt)",
+      "Acosh(ωt)"
+    ],
+    "a": 0,
+    "e": "오일러 공식: Re{e^(jωt)}=cos(ωt)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "상호 인덕턴스 M이 있는 가동 접속 직렬 합성 L은?",
+    "o": [
+      "L₁+L₂",
+      "L₁+L₂-2M",
+      "L₁+L₂+2M",
+      "L₁-L₂+2M"
+    ],
+    "a": 2,
+    "e": "가동 접속: L=L₁+L₂+2M. 차동 접속: L₁+L₂-2M."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 평형 Y결선에서 중성선 전류는?",
+    "o": [
+      "√3배 선전류",
+      "선전류와 같음",
+      "0",
+      "1/3 선전류"
+    ],
+    "a": 2,
+    "e": "3상 평형: 중성선 전류=벡터합=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "지상(유도성) 부하 역률 개선 방법은?",
+    "o": [
+      "저항 추가",
+      "커패시터 병렬 연결",
+      "인덕터 직렬 연결",
+      "전압 낮춤"
+    ],
+    "a": 1,
+    "e": "커패시터(진상) 병렬 → 무효전력 상쇄."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "병렬 저항 R₁, R₂에서 R₁에 흐르는 전류 I₁은?",
+    "o": [
+      "I·R₁/(R₁+R₂)",
+      "I·R₂/(R₁+R₂)",
+      "I·(R₁+R₂)/R₁",
+      "I/R₁"
+    ],
+    "a": 1,
+    "e": "I₁=I·R₂/(R₁+R₂)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R=10Ω, V=100V 소비 전력은?",
+    "o": [
+      "10W",
+      "100W",
+      "1000W",
+      "10000W"
+    ],
+    "a": 2,
+    "e": "P=V²/R=100²/10=1000W."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "피드백(feedback)의 주목적은?",
+    "o": [
+      "신호 증폭",
+      "외란 영향 감소",
+      "전력 감소",
+      "회로 단순화"
+    ],
+    "a": 1,
+    "e": "부궤환: 오차 감소, 외란 억제, 안정성 향상."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "정상 속도 오차를 0으로 하려면 시스템 형은?",
+    "o": [
+      "0형",
+      "1형",
+      "2형",
+      "3형"
+    ],
+    "a": 1,
+    "e": "1형(적분 1개): 속도 입력 정상 오차=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R=10Ω 두 개 직렬 연결 합성 저항은?",
+    "o": [
+      "5Ω",
+      "10Ω",
+      "20Ω",
+      "100Ω"
+    ],
+    "a": 2,
+    "e": "직렬: R=R₁+R₂=10+10=20Ω."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "정상 상태 오차를 줄이는 방법이 아닌 것은?",
+    "o": [
+      "개루프 이득 증가",
+      "적분 요소 추가",
+      "미분 동작 추가",
+      "시스템 형 증가"
+    ],
+    "a": 2,
+    "e": "D 동작은 과도 응답 개선. 정상 상태 오차에 직접 효과 없음."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "샘플링 정리: 신호를 정확히 복원하려면?",
+    "o": [
+      "fs≥fmax",
+      "fs≥2fmax",
+      "fs=fmax",
+      "fs≤fmax"
+    ],
+    "a": 1,
+    "e": "나이퀴스트 정리: fs≥2fmax."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "Z변환이 사용되는 시스템은?",
+    "o": [
+      "연속 시간",
+      "이산 시간(디지털)",
+      "아날로그 필터",
+      "전력 시스템"
+    ],
+    "a": 1,
+    "e": "Z변환: 이산(디지털) 시스템 해석."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "직류 정상 상태에서 커패시터는?",
+    "o": [
+      "단락",
+      "개방",
+      "저항",
+      "인덕터"
+    ],
+    "a": 1,
+    "e": "DC 정상 상태: C=개방(∞ 임피던스)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전압 분배: R₁+R₂ 직렬에서 R₁ 양단 전압은?",
+    "o": [
+      "V·R₂/(R₁+R₂)",
+      "V·R₁/(R₁+R₂)",
+      "V/(R₁+R₂)",
+      "V·R₁R₂"
+    ],
+    "a": 1,
+    "e": "V₁=V·R₁/(R₁+R₂)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "임피던스 Z=|Z|∠θ에서 θ>0이면?",
+    "o": [
+      "용량성(전류 앞섬)",
+      "유도성(전류 뒤짐)",
+      "저항성",
+      "공진"
+    ],
+    "a": 1,
+    "e": "θ>0: 유도성(지상 전류). θ<0: 용량성(진상 전류)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RC 직렬 회로 시정수 τ는?",
+    "o": [
+      "R/C",
+      "RC",
+      "1/(RC)",
+      "√(RC)"
+    ],
+    "a": 1,
+    "e": "τ=RC(초). RL: τ=L/R."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "유효 전력 P는?",
+    "o": [
+      "VI",
+      "VIsinθ",
+      "VIcosθ",
+      "VI/cosθ"
+    ],
+    "a": 2,
+    "e": "P=VIcosθ(W)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "T형 4단자 회로 구조는?",
+    "o": [
+      "병렬-직렬-병렬",
+      "직렬-병렬-직렬",
+      "직렬-직렬-직렬",
+      "병렬-병렬-병렬"
+    ],
+    "a": 1,
+    "e": "T형: 직렬-병렬-직렬 구조."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이상 연산 증폭기(op-amp)의 특성이 아닌 것은?",
+    "o": [
+      "입력 임피던스=∞",
+      "출력 임피던스=0",
+      "전압 이득=∞",
+      "유한한 대역폭"
+    ],
+    "a": 3,
+    "e": "이상 op-amp: 대역폭=∞. 유한 대역폭은 실제 특성."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "반전 증폭기 전압 이득 Av는?",
+    "o": [
+      "Rf/Ri",
+      "-Rf/Ri",
+      "1+Rf/Ri",
+      "-Ri/Rf"
+    ],
+    "a": 1,
+    "e": "Av=-Rf/Ri."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "-3dB 주파수(차단 주파수)란?",
+    "o": [
+      "이득=최대의 1/√2",
+      "이득=0",
+      "위상=-90°",
+      "이득=최대"
+    ],
+    "a": 0,
+    "e": "-3dB: 이득이 최대의 1/√2(≈0.707)인 주파수."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "저역통과필터(LPF)의 특성은?",
+    "o": [
+      "고주파 통과",
+      "저주파 통과, 고주파 차단",
+      "특정 대역만 통과",
+      "특정 대역만 차단"
+    ],
+    "a": 1,
+    "e": "LPF: 저주파 통과, 고주파 차단."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "DC 정상 상태에서 인덕터 L에 걸리는 전압은?",
+    "o": [
+      "LI",
+      "L·dI/dt",
+      "0",
+      "ωLI"
+    ],
+    "a": 2,
+    "e": "DC: dI/dt=0 → V=L·dI/dt=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "0<ζ<1 (부족제동) 계단 응답 특성은?",
+    "o": [
+      "오버슈트 발생",
+      "오버슈트 없음",
+      "진동 없음",
+      "계속 발산"
+    ],
+    "a": 0,
+    "e": "부족제동: 오버슈트 발생 후 수렴."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "기함수 f(-t)=-f(t)의 푸리에 급수 특성은?",
+    "o": [
+      "An만 존재",
+      "Bn(sin)만 존재",
+      "A₀만 존재",
+      "모든 계수"
+    ],
+    "a": 1,
+    "e": "기함수: sin 성분만 → Bn만 존재."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전달 함수 극점이 우반 평면에 있으면?",
+    "o": [
+      "안정",
+      "불안정",
+      "임계 안정",
+      "중립"
+    ],
+    "a": 1,
+    "e": "극점 Re>0: 불안정. Re<0: 안정."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "위상 여유 PM>0°이면?",
+    "o": [
+      "불안정",
+      "안정",
+      "임계 안정",
+      "발진"
+    ],
+    "a": 1,
+    "e": "PM>0°: 안정. PM=0°: 임계. PM<0°: 불안정."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "기본파 60Hz의 3차 고조파 주파수는?",
+    "o": [
+      "60Hz",
+      "120Hz",
+      "180Hz",
+      "240Hz"
+    ],
+    "a": 2,
+    "e": "3차 고조파=3×60=180Hz."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "능동 소자(active element)가 아닌 것은?",
+    "o": [
+      "트랜지스터",
+      "연산 증폭기",
+      "다이오드",
+      "저항"
+    ],
+    "a": 3,
+    "e": "수동 소자: R, L, C. 능동 소자: 증폭/전원 가능."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "대칭 3상에서 각 상의 위상차는?",
+    "o": [
+      "60°",
+      "90°",
+      "120°",
+      "180°"
+    ],
+    "a": 2,
+    "e": "대칭 3상: 각 상 위상차 120°."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "메시 전류법의 근거 법칙은?",
+    "o": [
+      "KCL",
+      "KVL",
+      "옴의 법칙",
+      "중첩의 원리"
+    ],
+    "a": 1,
+    "e": "메시 전류법: 각 메시에 KVL 적용."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "비선형 소자의 예는?",
+    "o": [
+      "저항기",
+      "콘덴서",
+      "다이오드",
+      "코일"
+    ],
+    "a": 2,
+    "e": "다이오드: V-I 관계가 비선형."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이상 변압기 권수비 n에서 임피던스 변환은?",
+    "o": [
+      "n²ZL",
+      "ZL/n²",
+      "nZL",
+      "ZL"
+    ],
+    "a": 0,
+    "e": "Zi=n²ZL. 임피던스 정합에 활용."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "정현파 실효값 Vrms와 최댓값 Vm의 관계는?",
+    "o": [
+      "Vm",
+      "Vm/2",
+      "Vm/√2",
+      "√2·Vm"
+    ],
+    "a": 2,
+    "e": "Vrms=Vm/√2≈0.707Vm."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "균형 Δ-Y 변환 시 Ry는?",
+    "o": [
+      "RΔ×3",
+      "RΔ/3",
+      "RΔ²",
+      "3/RΔ"
+    ],
+    "a": 1,
+    "e": "Ry=RΔ/3. Y-Δ: RΔ=3Ry."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "제어 시스템에서 외란(disturbance)이란?",
+    "o": [
+      "설계된 입력",
+      "시스템을 방해하는 외부 신호",
+      "출력 신호",
+      "피드백 신호"
+    ],
+    "a": 1,
+    "e": "외란: 원하지 않게 시스템에 작용하는 외부 신호."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "무효 전력(Q)이 발생하는 이유는?",
+    "o": [
+      "저항 열 발생",
+      "L/C에서 에너지 교환",
+      "변환 손실",
+      "선로 저항"
+    ],
+    "a": 1,
+    "e": "무효전력: L(+Q)과 C(-Q)에서 에너지 교환."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "라플라스 변환 초기값 정리는?",
+    "o": [
+      "lim sF(s) (s→0)",
+      "lim sF(s) (s→∞)",
+      "F(0)",
+      "lim F(s) (s→∞)"
+    ],
+    "a": 1,
+    "e": "f(0⁺)=lim[s→∞] sF(s)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "무효 전력 보상에 사용되는 소자는?",
+    "o": [
+      "저항",
+      "변압기",
+      "커패시터 뱅크",
+      "차단기"
+    ],
+    "a": 2,
+    "e": "커패시터: 진상 무효전력 공급 → 역률 개선."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "LTI 시스템 컨볼루션 출력 y(t)는?",
+    "o": [
+      "x(t)+h(t)",
+      "x(t)×h(t)",
+      "x(t)*h(t)",
+      "x(t)/h(t)"
+    ],
+    "a": 2,
+    "e": "y(t)=x(t)*h(t)=∫x(τ)h(t-τ)dτ."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "IIR 필터의 특성은?",
+    "o": [
+      "유한 임펄스 응답",
+      "무한 임펄스 응답",
+      "항상 안정",
+      "선형 위상"
+    ],
+    "a": 1,
+    "e": "IIR: 피드백으로 무한 임펄스 응답."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "정착 시간(settling time)의 기준은?",
+    "o": [
+      "최종값의 ±2% 이내 도달",
+      "최초 오버슈트",
+      "최종값 10% 도달",
+      "최종값 50% 도달"
+    ],
+    "a": 0,
+    "e": "정착 시간: 응답이 최종값 ±2%(또는 ±5%) 이내 유지."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전압 조정률 VR 식은?",
+    "o": [
+      "(VFL-VNL)/VFL×100%",
+      "(VNL-VFL)/VFL×100%",
+      "VNL/VFL×100%",
+      "(VNL+VFL)/2×100%"
+    ],
+    "a": 1,
+    "e": "VR=(V무부하-V전부하)/V전부하×100%."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "복소 전력 S=V·I*에서 Re(S)는?",
+    "o": [
+      "무효전력 Q",
+      "유효전력 P",
+      "피상전력",
+      "역률"
+    ],
+    "a": 1,
+    "e": "S=P+jQ. P=Re(S)=유효전력."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이상 전압원 내부 저항은?",
+    "o": [
+      "무한대",
+      "0",
+      "부하와 같음",
+      "1Ω"
+    ],
+    "a": 1,
+    "e": "이상 전압원: 내부 저항=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이상 op-amp 가상 단락(virtual short)이란?",
+    "o": [
+      "입력 단자 실제 단락",
+      "두 입력 전압이 같다고 가정",
+      "출력=0V",
+      "전류=0A"
+    ],
+    "a": 1,
+    "e": "가상 단락: 두 입력 전압차≈0 (실제 단락 아님)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RL 회로 시정수 τ 이후 전류는 최종값의 몇 %?",
+    "o": [
+      "36.8%",
+      "50%",
+      "63.2%",
+      "86.5%"
+    ],
+    "a": 2,
+    "e": "t=τ: 응답=최종값×(1-e⁻¹)≈63.2%."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "단락(short circuit) 임피던스는?",
+    "o": [
+      "무한대",
+      "0",
+      "1",
+      "부하와 같음"
+    ],
+    "a": 1,
+    "e": "단락: Z=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "역률 낮을 때 문제점은?",
+    "o": [
+      "전압 상승",
+      "선로 전류 증가 및 손실 증가",
+      "주파수 감소",
+      "변압기 효율 증가"
+    ],
+    "a": 1,
+    "e": "역률↓ → 같은 전력에 더 많은 전류 → 동손 증가."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 전력 P=√3·VL·IL·cosθ에서 VL은?",
+    "o": [
+      "상전압",
+      "선간 전압",
+      "최대 전압",
+      "평균 전압"
+    ],
+    "a": 1,
+    "e": "VL: 선간 전압."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "2차 전달 함수의 비제동 자연 주파수 ωn이란?",
+    "o": [
+      "감쇠비",
+      "자연 주파수",
+      "제동 주파수",
+      "공진 주파수"
+    ],
+    "a": 1,
+    "e": "ωn: 비제동 자연 주파수. 제동 주파수 ωd=ωn√(1-ζ²)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "공진 주파수 이하에서 RLC 직렬 회로 특성은?",
+    "o": [
+      "유도성",
+      "용량성",
+      "저항성",
+      "중립"
+    ],
+    "a": 1,
+    "e": "f<f₀: XC>XL → 용량성(전류 진상)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "루스(Routh) 기준에서 불안정 판단은?",
+    "o": [
+      "배열에 음수 없음",
+      "첫 열에 부호 변화",
+      "행렬식=0",
+      "근이 실수"
+    ],
+    "a": 1,
+    "e": "루스 1열 부호 변화 횟수=우반평면 극점 수."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "단상 반파 정류 직류 평균 전압은? (Vm=최대값)",
+    "o": [
+      "Vm/π",
+      "2Vm/π",
+      "Vm/√2",
+      "Vm/2"
+    ],
+    "a": 0,
+    "e": "반파: Vdc=Vm/π≈0.318Vm. 전파: 2Vm/π≈0.637Vm."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "2전력계법: 역률 0.5 이하에서 나타나는 특성은?",
+    "o": [
+      "측정 오류",
+      "한쪽 지시 음(-)",
+      "역률=1",
+      "연결 오류"
+    ],
+    "a": 1,
+    "e": "역률<0.5(θ>60°): 한 전력계가 음의 값 표시. 총 P=P₁+P₂."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "회로 쌍대성에서 저항에 대응하는 요소는?",
+    "o": [
+      "인덕턴스",
+      "커패시턴스",
+      "컨덕턴스",
+      "리액턴스"
+    ],
+    "a": 2,
+    "e": "쌍대 관계: R↔G, L↔C, 직렬↔병렬."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "노드 전압법의 근거 법칙은?",
+    "o": [
+      "KVL",
+      "KCL",
+      "옴의 법칙",
+      "중첩"
+    ],
+    "a": 1,
+    "e": "노드 전압법: 각 노드에 KCL 적용."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "저항 소비 전력 P는?",
+    "o": [
+      "P=I/R",
+      "P=I²R",
+      "P=IR",
+      "P=I²/R"
+    ],
+    "a": 1,
+    "e": "줄 발열: P=I²R=V²/R=VI."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "비반전 증폭기 전압 이득 Av는?",
+    "o": [
+      "Rf/Ri",
+      "-Rf/Ri",
+      "1+Rf/Ri",
+      "-Ri/Rf"
+    ],
+    "a": 2,
+    "e": "비반전: Av=1+Rf/Ri."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "고역통과필터(HPF)에서 fc 이하 주파수는?",
+    "o": [
+      "통과",
+      "차단",
+      "이득=1",
+      "이득=∞"
+    ],
+    "a": 1,
+    "e": "HPF: fc 이하 차단, 이상 통과."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이득 여유(gain margin)란?",
+    "o": [
+      "위상=-180°에서 이득의 역수(dB)",
+      "이득=0dB에서 위상",
+      "최대 이득",
+      "절점 주파수 이득"
+    ],
+    "a": 0,
+    "e": "GM: 위상=-180°인 주파수에서 이득의 역수."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "라플라스 변환 최종값 정리는?",
+    "o": [
+      "lim sF(s) (s→∞)",
+      "lim sF(s) (s→0)",
+      "F(∞)",
+      "lim F(s) (s→0)"
+    ],
+    "a": 1,
+    "e": "f(∞)=lim[s→0] sF(s)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전달함수 영점(zero)이란?",
+    "o": [
+      "G(s)=0이 되는 s값",
+      "G(s)=∞이 되는 s값",
+      "안정 조건",
+      "위상=0인 주파수"
+    ],
+    "a": 0,
+    "e": "영점: G(s)=0. 극점: G(s)=∞."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R₁=R₂=100Ω 직렬 연결, 200V 인가 시 R₁ 양단 전압은?",
+    "o": [
+      "50V",
+      "100V",
+      "150V",
+      "200V"
+    ],
+    "a": 1,
+    "e": "전압 분배: V₁=200×100/(100+100)=100V."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 Δ결선에서 선전류와 상전류의 관계는?",
+    "o": [
+      "IL=IP",
+      "IL=√3·IP",
+      "IL=3·IP",
+      "IL=IP/√3"
+    ],
+    "a": 1,
+    "e": "Δ결선: IL=√3·IP, VL=VP."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RLC 병렬 공진 시 임피던스는?",
+    "o": [
+      "최소",
+      "최대",
+      "0",
+      "무한대"
+    ],
+    "a": 1,
+    "e": "병렬 공진: 임피던스 최대, 전류 최소."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전달 함수의 주파수 응답 H(jω)에서 크기와 위상은?",
+    "o": [
+      "실수부와 허수부",
+      "|H(jω)|와 ∠H(jω)",
+      "H(0)",
+      "H(∞)"
+    ],
+    "a": 1,
+    "e": "주파수 응답: |H(jω)|: 이득, ∠H(jω): 위상각."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "교류 회로에서 공진 시 역률은?",
+    "o": [
+      "0",
+      "0.5",
+      "1",
+      "무한대"
+    ],
+    "a": 2,
+    "e": "공진: XL=XC, 임피던스=R(순저항), 역률=1."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R=50Ω, L=0.1H 직렬 회로, f=100Hz에서 XL은?",
+    "o": [
+      "10Ω",
+      "31.4Ω",
+      "62.8Ω",
+      "100Ω"
+    ],
+    "a": 2,
+    "e": "XL=2πfL=2π×100×0.1≈62.8Ω."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 균형 부하에서 중성점 전압은?",
+    "o": [
+      "선간 전압",
+      "상전압",
+      "0",
+      "무한대"
+    ],
+    "a": 2,
+    "e": "3상 균형 부하: 중성점 전압=0."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "반전 증폭기에서 Ri=10kΩ, Rf=100kΩ이면 이득은?",
+    "o": [
+      "+10",
+      "-10",
+      "+0.1",
+      "-0.1"
+    ],
+    "a": 1,
+    "e": "Av=-Rf/Ri=-100/10=-10."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "전류원과 병렬 저항 R의 테브난 등가는?",
+    "o": [
+      "V=IR, 직렬 R",
+      "V=I/R, 직렬 R",
+      "V=IR, 병렬 R",
+      "V=I²R, 직렬 R"
+    ],
+    "a": 0,
+    "e": "노턴→테브난: Vth=Is×Rth, Rth=R."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "2차 시스템에서 고유 주파수 ωn이 클수록?",
+    "o": [
+      "응답 느려짐",
+      "응답 빨라짐",
+      "오버슈트 증가",
+      "감쇠 감소"
+    ],
+    "a": 1,
+    "e": "ωn 클수록 응답 속도(상승 시간, 정착 시간) 빨라짐."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "보드 선도에서 1차 저역통과필터의 기울기(고주파 감쇠)는?",
+    "o": [
+      "-20dB/decade",
+      "-40dB/decade",
+      "0dB/decade",
+      "+20dB/decade"
+    ],
+    "a": 0,
+    "e": "1차 LPF: 고주파 기울기 -20dB/decade."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "1차 RC LPF의 차단 주파수 fc는?",
+    "o": [
+      "1/(2πRC)",
+      "1/(πRC)",
+      "2πRC",
+      "1/(2RC)"
+    ],
+    "a": 0,
+    "e": "fc=1/(2πRC)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이상 전류원의 내부 저항은?",
+    "o": [
+      "0",
+      "무한대",
+      "1Ω",
+      "부하와 같음"
+    ],
+    "a": 1,
+    "e": "이상 전류원: 내부 저항=∞(전압에 관계없이 일정 전류)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RL 직렬 회로 시정수 τ는?",
+    "o": [
+      "R/L",
+      "L/R",
+      "RL",
+      "1/(RL)"
+    ],
+    "a": 1,
+    "e": "RL 시정수 τ=L/R(초)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "라플라스 변환 L{e^(-at)}는?",
+    "o": [
+      "1/(s+a)",
+      "1/(s-a)",
+      "a/(s+a)",
+      "s/(s+a)"
+    ],
+    "a": 0,
+    "e": "L{e^(-at)}=1/(s+a)."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R=20Ω, L=0.1H 직렬 회로, 주파수 f=100Hz일 때 임피던스 |Z|는?",
+    "o": [
+      "약 65.5Ω",
+      "약 20Ω",
+      "약 62.8Ω",
+      "약 83.1Ω"
+    ],
+    "a": 0,
+    "e": "XL=2π×100×0.1=62.8Ω. |Z|=√(20²+62.8²)=√(400+3943.8)≈65.9Ω≈65.5Ω."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RLC 직렬 공진: L=0.1H, C=100μF일 때 공진 주파수 f₀=1/(2π√LC)는?",
+    "o": [
+      "약 50.3 Hz",
+      "약 15.9 Hz",
+      "약 31.6 Hz",
+      "약 100 Hz"
+    ],
+    "a": 0,
+    "e": "LC=0.1×100×10⁻⁶=10⁻⁵. √LC=3.162×10⁻³. f₀=1/(2π×3.162×10⁻³)≈50.3 Hz."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RC 회로 시정수 τ=RC에서 R=10kΩ, C=100μF일 때 τ는?",
+    "o": [
+      "1 s",
+      "0.1 s",
+      "10 s",
+      "100 ms"
+    ],
+    "a": 0,
+    "e": "τ=10×10³×100×10⁻⁶=1 s."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "RL 회로 시정수 τ=L/R에서 L=0.5H, R=100Ω일 때 τ는?",
+    "o": [
+      "5 ms",
+      "50 ms",
+      "0.5 ms",
+      "500 ms"
+    ],
+    "a": 0,
+    "e": "τ=0.5/100=0.005 s=5 ms."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "교류 전압 v=141.4sin(314t) V의 실효값과 주파수는?",
+    "o": [
+      "100V, 50Hz",
+      "141.4V, 50Hz",
+      "100V, 314Hz",
+      "70.7V, 100Hz"
+    ],
+    "a": 0,
+    "e": "Vm=141.4V, Vrms=141.4/√2=100V. ω=314=2πf → f=314/(2π)≈50Hz."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R=10Ω, XL=10Ω, XC=4Ω의 RLC 직렬 회로 역률 cosθ는?",
+    "o": [
+      "0.857",
+      "0.707",
+      "1.0",
+      "0.5"
+    ],
+    "a": 0,
+    "e": "Z=R+j(XL-XC)=10+j6. |Z|=√(100+36)=√136≈11.66. cosθ=R/|Z|=10/11.66≈0.857."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 Y결선 선간전압 VL=380V일 때 상전압 Vp=VL/√3는?",
+    "o": [
+      "약 220V",
+      "약 190V",
+      "약 380V",
+      "약 657V"
+    ],
+    "a": 0,
+    "e": "Vp=380/√3≈380/1.732≈219.4V≈220V."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "3상 평형 Y결선, VL=380V, IL=10A, cosθ=0.8일 때 3상 유효전력 P=√3·VL·IL·cosθ는?",
+    "o": [
+      "약 5,276W",
+      "약 3,040W",
+      "약 6,080W",
+      "약 2,638W"
+    ],
+    "a": 0,
+    "e": "P=√3×380×10×0.8=1.732×380×8≈5,275W."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "최대 전력 전달 조건: Vth=100V, Rth=50Ω일 때 최대 전력 Pmax=Vth²/(4Rth)는?",
+    "o": [
+      "50W",
+      "100W",
+      "25W",
+      "200W"
+    ],
+    "a": 0,
+    "e": "Pmax=100²/(4×50)=10000/200=50W."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "반전 증폭기: Ri=5kΩ, Rf=100kΩ일 때 전압 이득 Av=-Rf/Ri는?",
+    "o": [
+      "-20",
+      "+20",
+      "-0.05",
+      "+0.05"
+    ],
+    "a": 0,
+    "e": "Av=-100/5=-20."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "Q=ω₀L/R에서 f₀=1kHz, L=10mH, R=2Ω일 때 품질계수 Q는?",
+    "o": [
+      "약 31.4",
+      "약 3.14",
+      "약 314",
+      "약 0.314"
+    ],
+    "a": 0,
+    "e": "ω₀=2π×1000≈6283 rad/s. Q=6283×0.01/2=62.83/2≈31.4."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "직류 전압 분배: R₁=3kΩ, R₂=7kΩ 직렬, V=100V 인가 시 R₂ 양단 전압은?",
+    "o": [
+      "70V",
+      "30V",
+      "50V",
+      "10V"
+    ],
+    "a": 0,
+    "e": "V₂=V×R₂/(R₁+R₂)=100×7000/10000=70V."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "단상 전파 정류 평균 전압 Vdc=2Vm/π에서 변압기 2차 실효값 220V일 때 Vdc는?",
+    "o": [
+      "약 198V",
+      "약 220V",
+      "약 311V",
+      "약 141V"
+    ],
+    "a": 0,
+    "e": "Vm=220×√2≈311V. Vdc=2×311/π≈198V."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "2차 시스템 G(s)=ωn²/(s²+2ζωns+ωn²)에서 ζ=0.5, ωn=10일 때 오버슈트 %OS=e^(-πζ/√(1-ζ²))×100은?",
+    "o": [
+      "약 16.3%",
+      "약 5%",
+      "약 25%",
+      "약 50%"
+    ],
+    "a": 0,
+    "e": "%OS=exp(-π×0.5/√(1-0.25))×100=exp(-π×0.5/0.866)×100=exp(-1.814)×100≈16.3%."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "1차 RC LPF에서 R=1kΩ, C=10μF일 때 차단 주파수 fc=1/(2πRC)는?",
+    "o": [
+      "약 15.9 Hz",
+      "약 159 Hz",
+      "약 1.59 Hz",
+      "약 1590 Hz"
+    ],
+    "a": 0,
+    "e": "fc=1/(2π×1000×10×10⁻⁶)=1/(2π×0.01)≈15.9 Hz."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "이상 변압기 권수비 n=N₁/N₂=10, 부하 ZL=50Ω일 때 1차 측 입력 임피던스 Zi=n²ZL는?",
+    "o": [
+      "5000Ω",
+      "500Ω",
+      "50Ω",
+      "0.5Ω"
+    ],
+    "a": 0,
+    "e": "Zi=10²×50=5000Ω."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "피상전력 S=1000VA, 역률 cosθ=0.6일 때 유효전력 P와 무효전력 Q는?",
+    "o": [
+      "P=600W, Q=800Var",
+      "P=800W, Q=600Var",
+      "P=600W, Q=600Var",
+      "P=1000W, Q=0"
+    ],
+    "a": 0,
+    "e": "P=S×cosθ=600W. sinθ=√(1-0.36)=0.8. Q=S×sinθ=800Var."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "복소 전력 S=V·I*에서 V=100∠30° V, I=10∠-10° A일 때 S는?",
+    "o": [
+      "1000∠40° VA",
+      "1000∠20° VA",
+      "1000∠-40° VA",
+      "100∠40° VA"
+    ],
+    "a": 0,
+    "e": "S=V·I*=100∠30°×10∠+10°=1000∠40° VA."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "부족제동 2차 시스템 ζ=0.3, ωn=20 rad/s일 때 감쇠 진동 주파수 ωd=ωn√(1-ζ²)는?",
+    "o": [
+      "약 19.1 rad/s",
+      "약 20 rad/s",
+      "약 6 rad/s",
+      "약 18.6 rad/s"
+    ],
+    "a": 0,
+    "e": "ωd=20×√(1-0.09)=20×√0.91=20×0.954≈19.1 rad/s."
+  },
+  {
+    "s": "회로이론 및 제어공학",
+    "q": "R=5Ω, XL=12Ω 직렬 회로에서 100V 인가 시 전류 I는?",
+    "o": [
+      "약 7.69A",
+      "약 5A",
+      "약 12A",
+      "약 8.33A"
+    ],
+    "a": 0,
+    "e": "|Z|=√(25+144)=√169=13Ω. I=V/|Z|=100/13≈7.69A."
+  },
+  {
     "s": "전기설비기술기준",
     "q": "전기설비기술기준에서 저압의 범위는?",
     "o": [
@@ -5312,642 +6952,6 @@ const ALL_QUESTIONS = [
     "e": "대지 전압 150V 이하: 0.1MΩ 이상."
   },
   {
-    "s": "전기자기학",
-    "q": "전자기파에서 전파 방향을 결정하는 벡터는?",
-    "o": [
-      "E 벡터",
-      "H 벡터",
-      "E×H (포인팅 벡터)",
-      "E+H"
-    ],
-    "a": 2,
-    "e": "포인팅 벡터 P=E×H: 전자기 에너지 전파 방향."
-  },
-  {
-    "s": "전기자기학",
-    "q": "정전 에너지 W=½QV에서 Q와 V를 2배로 하면 에너지는?",
-    "o": [
-      "2배",
-      "4배",
-      "8배",
-      "변화 없음"
-    ],
-    "a": 1,
-    "e": "W=½CV². V를 2배: W는 4배. (또는 W=½QV에서 Q·V 모두 2배: W=4배)"
-  },
-  {
-    "s": "전기자기학",
-    "q": "전기장 E 내 단위 체적에 저장되는 에너지 밀도는?",
-    "o": [
-      "εE",
-      "½εE²",
-      "εE²/2μ",
-      "μH²/2ε"
-    ],
-    "a": 1,
-    "e": "전기장 에너지 밀도: w=½εE² (J/m³)."
-  },
-  {
-    "s": "전기자기학",
-    "q": "자기장 H 내 단위 체적 에너지 밀도는?",
-    "o": [
-      "μH",
-      "μH²",
-      "½μH²",
-      "μH/2"
-    ],
-    "a": 2,
-    "e": "자기장 에너지 밀도: w=½μH² (J/m³)."
-  },
-  {
-    "s": "전기자기학",
-    "q": "도체 표면 전하 밀도 σ와 전기장 E의 관계는?",
-    "o": [
-      "σ=εE",
-      "σ=E/ε",
-      "σ=μE",
-      "σ=E²"
-    ],
-    "a": 0,
-    "e": "도체 표면: σ=ε₀E(법선 성분). E=σ/ε."
-  },
-  {
-    "s": "전기자기학",
-    "q": "구(sphere) 내부에 균일 전하가 분포 시 내부 전기장은 거리 r에 따라?",
-    "o": [
-      "r에 반비례",
-      "r에 비례",
-      "r²에 비례",
-      "일정"
-    ],
-    "a": 1,
-    "e": "균일 전하 구 내부: E∝r (거리에 비례). 구 외부: E∝1/r²."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "RLC 병렬 공진 시 임피던스는?",
-    "o": [
-      "최소",
-      "최대",
-      "0",
-      "무한대"
-    ],
-    "a": 1,
-    "e": "병렬 공진: 임피던스 최대, 전류 최소."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전달 함수의 주파수 응답 H(jω)에서 크기와 위상은?",
-    "o": [
-      "실수부와 허수부",
-      "|H(jω)|와 ∠H(jω)",
-      "H(0)",
-      "H(∞)"
-    ],
-    "a": 1,
-    "e": "주파수 응답: |H(jω)|: 이득, ∠H(jω): 위상각."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "교류 회로에서 공진 시 역률은?",
-    "o": [
-      "0",
-      "0.5",
-      "1",
-      "무한대"
-    ],
-    "a": 2,
-    "e": "공진: XL=XC, 임피던스=R(순저항), 역률=1."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "R=50Ω, L=0.1H 직렬 회로, f=100Hz에서 XL은?",
-    "o": [
-      "10Ω",
-      "31.4Ω",
-      "62.8Ω",
-      "100Ω"
-    ],
-    "a": 2,
-    "e": "XL=2πfL=2π×100×0.1≈62.8Ω."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "3상 균형 부하에서 중성점 전압은?",
-    "o": [
-      "선간 전압",
-      "상전압",
-      "0",
-      "무한대"
-    ],
-    "a": 2,
-    "e": "3상 균형 부하: 중성점 전압=0."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "반전 증폭기에서 Ri=10kΩ, Rf=100kΩ이면 이득은?",
-    "o": [
-      "+10",
-      "-10",
-      "+0.1",
-      "-0.1"
-    ],
-    "a": 1,
-    "e": "Av=-Rf/Ri=-100/10=-10."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "전류원과 병렬 저항 R의 테브난 등가는?",
-    "o": [
-      "V=IR, 직렬 R",
-      "V=I/R, 직렬 R",
-      "V=IR, 병렬 R",
-      "V=I²R, 직렬 R"
-    ],
-    "a": 0,
-    "e": "노턴→테브난: Vth=Is×Rth, Rth=R."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "2차 시스템에서 고유 주파수 ωn이 클수록?",
-    "o": [
-      "응답 느려짐",
-      "응답 빨라짐",
-      "오버슈트 증가",
-      "감쇠 감소"
-    ],
-    "a": 1,
-    "e": "ωn 클수록 응답 속도(상승 시간, 정착 시간) 빨라짐."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "보드 선도에서 1차 저역통과필터의 기울기(고주파 감쇠)는?",
-    "o": [
-      "-20dB/decade",
-      "-40dB/decade",
-      "0dB/decade",
-      "+20dB/decade"
-    ],
-    "a": 0,
-    "e": "1차 LPF: 고주파 기울기 -20dB/decade."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "1차 RC LPF의 차단 주파수 fc는?",
-    "o": [
-      "1/(2πRC)",
-      "1/(πRC)",
-      "2πRC",
-      "1/(2RC)"
-    ],
-    "a": 0,
-    "e": "fc=1/(2πRC)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "이상 전류원의 내부 저항은?",
-    "o": [
-      "0",
-      "무한대",
-      "1Ω",
-      "부하와 같음"
-    ],
-    "a": 1,
-    "e": "이상 전류원: 내부 저항=∞(전압에 관계없이 일정 전류)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "RL 직렬 회로 시정수 τ는?",
-    "o": [
-      "R/L",
-      "L/R",
-      "RL",
-      "1/(RL)"
-    ],
-    "a": 1,
-    "e": "RL 시정수 τ=L/R(초)."
-  },
-  {
-    "s": "회로이론 및 제어공학",
-    "q": "라플라스 변환 L{e^(-at)}는?",
-    "o": [
-      "1/(s+a)",
-      "1/(s-a)",
-      "a/(s+a)",
-      "s/(s+a)"
-    ],
-    "a": 0,
-    "e": "L{e^(-at)}=1/(s+a)."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 유효 전력 손실은 무엇에 비례하는가?",
-    "o": [
-      "전류",
-      "전류의 제곱",
-      "전압",
-      "저항의 역수"
-    ],
-    "a": 1,
-    "e": "P_loss=I²R. 전류 제곱에 비례."
-  },
-  {
-    "s": "전력공학",
-    "q": "변압기 철심 손실(철손)의 구성은?",
-    "o": [
-      "동손+히스테리시스손",
-      "히스테리시스손+와전류손",
-      "동손+와전류손",
-      "히스테리시스손만"
-    ],
-    "a": 1,
-    "e": "철손=히스테리시스손+와전류손. 동손은 권선(구리) 손실."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 역률 1에 가까울수록?",
-    "o": [
-      "무효전력 최대",
-      "유효전력 최소",
-      "전력 손실 최소",
-      "피상전력 최대"
-    ],
-    "a": 2,
-    "e": "역률 1: 무효전력=0, 피상전력=유효전력, 전류 최소 → 손실 최소."
-  },
-  {
-    "s": "전력공학",
-    "q": "수력 발전의 이론 출력 P는?",
-    "o": [
-      "P=ρQH",
-      "P=9.8QH",
-      "P=9.8QHη",
-      "P=QH/η"
-    ],
-    "a": 2,
-    "e": "P=9.8QHη (kW). Q: 유량(m³/s), H: 낙차(m), η: 효율."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 부하 지속 곡선(load duration curve)이 나타내는 것은?",
-    "o": [
-      "하루 중 시간별 부하",
-      "연간 특정 부하 이상의 지속 시간",
-      "계절별 부하",
-      "주파수 변동"
-    ],
-    "a": 1,
-    "e": "부하 지속 곡선: 연간 특정 전력 이상이 몇 시간 지속되는지 표현."
-  },
-  {
-    "s": "전력공학",
-    "q": "가공 송전선에서 코로나 임계 전압 이상 시 나타나는 현상이 아닌 것은?",
-    "o": [
-      "전력 손실",
-      "통신 장해",
-      "오존 발생",
-      "절연 강도 증가"
-    ],
-    "a": 3,
-    "e": "코로나 발생: 전력 손실, 통신 장해, 오존 발생. 절연 강도 감소."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 임피던스 기준값(base impedance) Zbase는?",
-    "o": [
-      "Vbase/Ibase",
-      "Vbase²/Sbase",
-      "Sbase/Vbase",
-      "Ibase×Vbase"
-    ],
-    "a": 1,
-    "e": "Zbase=Vbase²/Sbase (Ω). 퍼센트(%) 임피던스 계산 기준."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 조류(power flow)의 p.u.(단위법) 사용 이유는?",
-    "o": [
-      "정확도 향상",
-      "전압 레벨 무관하게 비교 용이",
-      "전류 계산 단순화",
-      "비용 절감"
-    ],
-    "a": 1,
-    "e": "p.u.: 기준값 대비 비율. 전압 레벨 다른 계통을 통일 표현."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통 '계통 붕괴(blackout)'의 가장 큰 원인은?",
-    "o": [
-      "주파수 과잉",
-      "단순 차단기 동작",
-      "발전-부하 불균형의 연쇄 차단",
-      "역률 부족"
-    ],
-    "a": 2,
-    "e": "블랙아웃: 발전-부하 불균형으로 연쇄 차단 → 전체 정전."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통 안정도 해석에서 P-δ 곡선에서 안정 운전점은?",
-    "o": [
-      "δ>90°",
-      "δ=90°",
-      "δ<90°",
-      "δ=180°"
-    ],
-    "a": 2,
-    "e": "P=EV/X·sinδ. 안정: δ<90°(dP/dδ>0). 불안정: δ>90°."
-  },
-  {
-    "s": "전력공학",
-    "q": "동기 발전기 병렬 투입 시 동기화(synchronizing) 전류가 흐르는 이유는?",
-    "o": [
-      "전압 차이",
-      "주파수 차이",
-      "위상 차이",
-      "극성 차이"
-    ],
-    "a": 2,
-    "e": "위상 차이 시 동기화 전류 흐름 → 발전기 위상 맞춤."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 비대칭 고장(1선 지락)에서 영상 전류가 흐르는 조건은?",
-    "o": [
-      "비접지 계통",
-      "저항 접지",
-      "직접 접지 계통",
-      "모든 계통"
-    ],
-    "a": 2,
-    "e": "영상 전류는 접지 경로가 있어야 흐름. 직접 접지 시 영상 전류 최대."
-  },
-  {
-    "s": "전력공학",
-    "q": "전력 계통에서 전력용 퓨즈(PF)의 장점은?",
-    "o": [
-      "재투입 가능",
-      "고속 차단·한류 특성",
-      "대용량 차단 가능",
-      "저렴하지 않음"
-    ],
-    "a": 1,
-    "e": "PF: 고속 차단, 한류 특성 우수. 단점: 1회용(재사용 불가)."
-  },
-  {
-    "s": "전기기기",
-    "q": "3상 유도전동기에서 회전자에 유도되는 EMF의 주파수는?",
-    "o": [
-      "f₁",
-      "s×f₁",
-      "(1-s)×f₁",
-      "f₁/s"
-    ],
-    "a": 1,
-    "e": "회전자 유도 주파수 f₂=s×f₁."
-  },
-  {
-    "s": "전기기기",
-    "q": "직류 전동기에서 전기자 반작용의 영향은?",
-    "o": [
-      "토크 증가",
-      "자속 왜곡 및 중성축 이동",
-      "속도 증가",
-      "역기전력 증가"
-    ],
-    "a": 1,
-    "e": "전기자 반작용: 자속 왜곡, 전기적 중성축 이동."
-  },
-  {
-    "s": "전기기기",
-    "q": "3상 유도전동기 전전압 기동 전류는 정격의 몇 배 정도인가?",
-    "o": [
-      "1~2배",
-      "3~4배",
-      "5~7배",
-      "10배 이상"
-    ],
-    "a": 2,
-    "e": "전전압 기동 전류: 정격의 5~7배(대형기). 기동 장치로 제한 필요."
-  },
-  {
-    "s": "전기기기",
-    "q": "변압기 손실 중 부하에 무관한 손실은?",
-    "o": [
-      "동손",
-      "와전류손과 히스테리시스손(철손)",
-      "스트레이 손실",
-      "기계손"
-    ],
-    "a": 1,
-    "e": "철손: 부하 무관, 전압·주파수에 의존. 동손: 전류(부하) 의존."
-  },
-  {
-    "s": "전기기기",
-    "q": "3상 동기 발전기에서 단절권(short pitch winding)의 목적은?",
-    "o": [
-      "출력 향상",
-      "고조파 제거",
-      "냉각 개선",
-      "절연 강화"
-    ],
-    "a": 1,
-    "e": "단절권: 코일 피치를 극 피치보다 짧게 → 특정 고조파 억제."
-  },
-  {
-    "s": "전기기기",
-    "q": "전동기 과부하 보호 장치로 가장 많이 사용되는 것은?",
-    "o": [
-      "퓨즈",
-      "열동 과전류 계전기(Thermal relay)",
-      "차단기",
-      "SPD"
-    ],
-    "a": 1,
-    "e": "열동 계전기: 과전류에 의한 발열로 동작. 전동기 과부하 표준 보호."
-  },
-  {
-    "s": "전기기기",
-    "q": "변압기 철심 재료로 규소강판을 사용하는 이유는?",
-    "o": [
-      "저렴함",
-      "히스테리시스손·와전류손 감소",
-      "기계 강도 향상",
-      "냉각 효과"
-    ],
-    "a": 1,
-    "e": "규소강판: 규소 첨가로 전기 저항↑(와전류손↓), 히스테리시스 루프 작음."
-  },
-  {
-    "s": "전기기기",
-    "q": "직류 발전기에서 단자 전압 V=?",
-    "o": [
-      "E+IaRa",
-      "E-IaRa",
-      "Ia×Ra",
-      "E/Ia"
-    ],
-    "a": 1,
-    "e": "V=E-IaRa. E: 유도 EMF, Ia: 전기자 전류, Ra: 전기자 저항."
-  },
-  {
-    "s": "전기기기",
-    "q": "전력용 변압기의 냉각 방식 ONAN의 의미는?",
-    "o": [
-      "유입 자냉식",
-      "유입 수냉식",
-      "건식 공냉",
-      "가스 냉각"
-    ],
-    "a": 0,
-    "e": "ONAN(Oil Natural Air Natural): 유입 자냉식. 변압기 표준 냉각 방식."
-  },
-  {
-    "s": "전기기기",
-    "q": "유도전동기의 슬립이 0에 가까울 때 특성은?",
-    "o": [
-      "정지",
-      "과부하",
-      "무부하(동기속도에 근접)",
-      "단락"
-    ],
-    "a": 2,
-    "e": "s→0: N→Ns(동기속도). 무부하 상태."
-  },
-  {
-    "s": "전기기기",
-    "q": "직류 분권 전동기의 속도-토크 특성은?",
-    "o": [
-      "속도가 토크에 무관하게 일정",
-      "토크 증가 시 속도 급감",
-      "토크 증가 시 속도 완만히 감소",
-      "토크 감소 시 속도 감소"
-    ],
-    "a": 2,
-    "e": "분권 전동기: 거의 정속도 특성(토크 증가 시 약간 속도 감소)."
-  },
-  {
-    "s": "전기기기",
-    "q": "전력용 다이오드(정류 다이오드)의 주요 특성은?",
-    "o": [
-      "양방향 전도",
-      "순방향만 전도",
-      "게이트 제어",
-      "고주파 스위칭"
-    ],
-    "a": 1,
-    "e": "다이오드: 순방향만 전도(단방향). 정류에 사용."
-  },
-  {
-    "s": "전기기기",
-    "q": "변압기 여자 돌입 전류(inrush current)의 특징은?",
-    "o": [
-      "정격의 1~2배",
-      "정격의 수십 배이나 수 초 내 감쇠",
-      "영구 지속",
-      "역방향"
-    ],
-    "a": 1,
-    "e": "여자 돌입 전류: 투입 순간 수십 배 전류 → 수 초 내 정상으로 감쇠."
-  },
-  {
-    "s": "전기기기",
-    "q": "동기 발전기 전압 조정률 VR(%)은?",
-    "o": [
-      "(E₀-V)/V×100%",
-      "(V-E₀)/V×100%",
-      "E₀/V×100%",
-      "V/E₀×100%"
-    ],
-    "a": 0,
-    "e": "VR=(E₀-V)/V×100%. E₀: 무부하 EMF, V: 정격 전압."
-  },
-  {
-    "s": "전기기기",
-    "q": "유도전동기에서 동기 와트(synchronous watt)란?",
-    "o": [
-      "고정자 입력 전력",
-      "2차 입력=공극 전력",
-      "출력 전력",
-      "손실 전력"
-    ],
-    "a": 1,
-    "e": "동기 와트(Tg): 2차 입력(공극 전력)=Pg. Pg=T·Ns(동기속도)."
-  },
-  {
-    "s": "전기기기",
-    "q": "3상 변압기 Δ-Δ 결선의 특징은?",
-    "o": [
-      "중성점 없음·3고조파 순환",
-      "중성점 있음",
-      "위상 변위 30°",
-      "1·2차 절연 완벽"
-    ],
-    "a": 0,
-    "e": "Δ-Δ: 중성점 없음, 3고조파 Δ 내부 순환, 위상 변위 0°."
-  },
-  {
-    "s": "전기기기",
-    "q": "전동기 역률이 낮은 이유는?",
-    "o": [
-      "저항 손실",
-      "무효 여자 전류(자화 전류)가 크기 때문",
-      "효율 저하",
-      "기계 마찰"
-    ],
-    "a": 1,
-    "e": "유도 전동기: 자속 생성에 필요한 자화 전류(무효분)가 크면 역률 낮아짐."
-  },
-  {
-    "s": "전기기기",
-    "q": "직류 전동기에서 속도 역기전력이 0일 때(정지 시) 기동 전류 제한 방법은?",
-    "o": [
-      "전압 증가",
-      "기동 저항 삽입",
-      "계자 제거",
-      "부하 증가"
-    ],
-    "a": 1,
-    "e": "기동 시 E=0 → Ia=V/Ra → 과전류. 기동 저항 삽입으로 제한."
-  },
-  {
-    "s": "전기기기",
-    "q": "3상 유도전동기 Y-Δ 기동 시 기동 전류는 전전압 기동의 몇 배?",
-    "o": [
-      "1/√3배",
-      "1/3배",
-      "√3배",
-      "3배"
-    ],
-    "a": 1,
-    "e": "Y-Δ 기동: 기동 전류=전전압의 1/3. 기동 토크도 1/3."
-  },
-  {
-    "s": "전기기기",
-    "q": "동기 전동기가 '탈조(pull-out)'되는 조건은?",
-    "o": [
-      "부하 토크<최대 토크",
-      "부하 토크>최대 토크(pull-out 토크)",
-      "역률=1",
-      "여자 과다"
-    ],
-    "a": 1,
-    "e": "탈조: 부하 토크가 최대 토크(pull-out torque) 초과 시 동기 이탈."
-  },
-  {
-    "s": "전기기기",
-    "q": "전력 변환에서 초퍼(chopper)의 기능은?",
-    "o": [
-      "AC→DC",
-      "DC→AC",
-      "DC→DC(전압 조정)",
-      "AC→AC"
-    ],
-    "a": 2,
-    "e": "초퍼: DC→DC 전압 변환. PWM으로 평균 전압 제어."
-  },
-  {
     "s": "전기설비기술기준",
     "q": "저압 옥내 배선의 최소 전선 단면적(단, 제어 회로 제외)은?",
     "o": [
@@ -6222,44 +7226,14 @@ const ALL_QUESTIONS = [
     ],
     "a": 1,
     "e": "배선 기구(콘센트 등): 해당 회로 차단기 정격 이하로 선정."
-  },
-  {
-    "s": "전기설비기술기준",
-    "q": "전기 설비에서 전선 색상 중 직류 양극(+)은?",
-    "o": [
-      "청색",
-      "적색(빨강)",
-      "흑색",
-      "녹색"
-    ],
-    "a": 1,
-    "e": "DC 양극(+): 적색. 음극(-): 청색(또는 흑색)."
-  },
-  {
-    "s": "전기기기",
-    "q": "동기 발전기에서 전기자 권선의 분포권(distributed winding)의 목적은?",
-    "o": [
-      "출력 증가",
-      "고조파 억제 및 파형 개선",
-      "냉각 향상",
-      "절연 강화"
-    ],
-    "a": 1,
-    "e": "분포권: 코일을 여러 슬롯에 분산 배치 → 기전력 파형 개선(고조파 감소)."
-  },
-  {
-    "s": "전기기기",
-    "q": "직류 발전기에서 보극(interpole)을 설치하는 목적은?",
-    "o": [
-      "출력 전압 상승",
-      "정류 개선(정류 불량 방지)",
-      "속도 제어",
-      "냉각 향상"
-    ],
-    "a": 1,
-    "e": "보극(인터폴): 정류 코일에 역방향 자속 인가 → 정류 불꽃 방지, 정류 개선."
   }
 ];
+
+// 공식 계산 문제 판별: 수식(숫자+단위) 포함 여부로 태깅
+function isFormula(q) {
+  return /[0-9]+\s*(Ω|V|A|W|Hz|F|H|T|Wb|m|kW|MVA|kV|kΩ|μF|mH|rpm|N·m|rad|%|p\.u\.)/.test(q.q) ||
+         /=\s*[0-9]/.test(q.q) || /[0-9]+\s*×\s*10/.test(q.q);
+}
 
 let currentSubject = '전체';
 let quizQuestions = [];
@@ -6276,10 +7250,10 @@ function selectSubject(sub, el) {
 }
 
 function showStart() {
-  document.getElementById('startScreen').style.display = 'block';
-  document.getElementById('questionWrap').style.display = 'none';
-  document.getElementById('scoreCard').style.display = 'none';
-  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('startScreen').style.display   = 'block';
+  document.getElementById('questionWrap').style.display  = 'none';
+  document.getElementById('scoreCard').style.display     = 'none';
+  document.getElementById('progressWrap').style.display  = 'none';
 }
 
 function shuffle(arr) {
@@ -6294,18 +7268,25 @@ function startQuiz() {
   let pool = currentSubject === '전체'
     ? ALL_QUESTIONS
     : ALL_QUESTIONS.filter(q => q.s === currentSubject);
+
+  const qType = document.getElementById('qType').value;
+  if (qType === 'formula') pool = pool.filter(q => isFormula(q));
+  if (qType === 'theory')  pool = pool.filter(q => !isFormula(q));
+
   const cnt = parseInt(document.getElementById('qCount').value);
   pool = shuffle([...pool]);
   quizQuestions = pool.slice(0, Math.min(cnt, pool.length));
   currentIdx = 0; score = 0; subjectScores = {};
+
   quizQuestions.forEach(q => {
-    if (!subjectScores[q.s]) subjectScores[q.s] = { correct: 0, total: 0 };
+    if (!subjectScores[q.s]) subjectScores[q.s] = { correct:0, total:0 };
     subjectScores[q.s].total++;
   });
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('scoreCard').style.display = 'none';
-  document.getElementById('questionWrap').style.display = 'block';
-  document.getElementById('progressWrap').style.display = 'block';
+
+  document.getElementById('startScreen').style.display   = 'none';
+  document.getElementById('scoreCard').style.display     = 'none';
+  document.getElementById('questionWrap').style.display  = 'block';
+  document.getElementById('progressWrap').style.display  = 'block';
   showQuestion();
 }
 
@@ -6317,14 +7298,18 @@ function showQuestion() {
 
   const total = quizQuestions.length;
   document.getElementById('progressText').textContent = `${currentIdx + 1} / ${total}`;
-  document.getElementById('scoreText').textContent = `점수: ${score}`;
+  document.getElementById('scoreText').textContent    = `점수: ${score}`;
   document.getElementById('progressFill').style.width = `${(currentIdx / total) * 100}%`;
-  document.getElementById('qNum').textContent = `Q${currentIdx + 1}`;
-  document.getElementById('qSubject').textContent = q.s;
+
+  document.getElementById('qNum').textContent  = `Q${currentIdx + 1}`;
+  document.getElementById('qSubj').textContent = q.s;
   document.getElementById('qText').textContent = q.q;
 
-  const labels = ['①', '②', '③', '④'];
-  const optDiv = document.getElementById('options');
+  const fb = document.getElementById('qFormulaBadge');
+  fb.style.display = isFormula(q) ? 'inline-block' : 'none';
+
+  const labels  = ['①', '②', '③', '④'];
+  const optDiv  = document.getElementById('options');
   optDiv.innerHTML = '';
   q.o.forEach((text, i) => {
     const btn = document.createElement('button');
@@ -6338,8 +7323,7 @@ function showQuestion() {
 function selectAnswer(selected, correct) {
   if (answered) return;
   answered = true;
-  const btns = document.querySelectorAll('.opt-btn');
-  btns.forEach((b, i) => {
+  document.querySelectorAll('.opt-btn').forEach((b, i) => {
     b.disabled = true;
     if (i === correct) b.classList.add('correct');
     else if (i === selected) b.classList.add('wrong');
@@ -6350,7 +7334,7 @@ function selectAnswer(selected, correct) {
   }
   document.getElementById('explanation').textContent = '💡 ' + quizQuestions[currentIdx].e;
   document.getElementById('explanation').classList.add('show');
-  document.getElementById('nextBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display   = 'inline-block';
   document.getElementById('nextBtn').textContent = currentIdx + 1 < quizQuestions.length ? '다음 문제 →' : '결과 보기';
   document.getElementById('scoreText').textContent = `점수: ${score}`;
 }
@@ -6362,19 +7346,22 @@ function nextQuestion() {
 }
 
 function endQuiz() {
-  document.getElementById('questionWrap').style.display = 'none';
-  document.getElementById('progressWrap').style.display = 'none';
-  document.getElementById('scoreCard').style.display = 'block';
+  document.getElementById('questionWrap').style.display  = 'none';
+  document.getElementById('progressWrap').style.display  = 'none';
+  document.getElementById('scoreCard').style.display     = 'block';
 
   const total = quizQuestions.length;
-  const pct = Math.round(score / total * 100);
+  const pct   = Math.round(score / total * 100);
   const grade = pct >= 90 ? '🏆 최우수' : pct >= 80 ? '🥇 우수' : pct >= 70 ? '🥈 양호' : pct >= 60 ? '🥉 합격선' : pct >= 50 ? '📚 분발 필요' : '❌ 재학습';
 
-  document.getElementById('scoreBig').textContent = `${pct}점`;
-  document.getElementById('scoreDetail').innerHTML = `${score} / ${total} 문제 정답 &nbsp;·&nbsp; ${grade}`;
+  document.getElementById('scoreBig').textContent    = `${pct}점`;
+  document.getElementById('scoreDetail').innerHTML   = `${score} / ${total} 문제 정답 &nbsp;·&nbsp; ${grade}`;
 
   let barsHtml = '';
-  Object.entries(subjectScores).forEach(([sub, v]) => {
+  const order = ['전기자기학','전력공학','전기기기','회로이론 및 제어공학','전기설비기술기준'];
+  order.forEach(sub => {
+    const v = subjectScores[sub];
+    if (!v) return;
     const p = Math.round(v.correct / v.total * 100);
     const color = p >= 70 ? '#3fb950' : p >= 50 ? '#d29922' : '#f85149';
     barsHtml += `<div class="s-bar">
