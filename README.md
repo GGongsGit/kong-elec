@@ -1,2 +1,1 @@
-# Kong-Su.github.io
 전기기사 준비 상태 확인을 위한 TEST 문제
