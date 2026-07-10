@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>전기 법칙 계산기</title>
+  <style>
+    html { font-size: 14px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f3f8;
+      --surface: #ffffff;
+      --surface2: #f5f7fc;
+      --border: #d0d8ea;
+      --accent: #1a5fa6;
+      --accent2: #5040b8;
+      --success: #2e7d4a;
+      --text: #1a2540;
+      --text-muted: #6b7a9a;
+      --radius: 8px;
+      --nav-bg: #1a2a4a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Malgun Gothic', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 28px 20px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--nav-bg);
+      margin-bottom: 6px;
+    }
+    header p { color: var(--text-muted); font-size: 0.875rem; }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 900px;
+    }
+
+    thead th {
+      background: var(--nav-bg);
+      padding: 13px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+      border-bottom: 2px solid var(--nav-bg);
+      white-space: nowrap;
+    }
+    thead th:first-child { border-radius: var(--radius) 0 0 0; }
+    thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+
+    tbody tr {
+      transition: background 0.15s;
+    }
+    tbody tr:nth-child(odd)  td { background: var(--surface); }
+    tbody tr:nth-child(even) td { background: var(--surface2); }
+    tbody tr:hover td { background: #eef4fb; }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 0.875rem;
+      line-height: 1.55;
+    }
+
+    /* 열 너비 */
+    .col-no      { width: 46px; min-width: 40px; text-align: center; color: var(--text-muted); font-size: 0.78rem; font-weight: 600; }
+    .col-law     { width: 140px; min-width: 130px; }
+    .col-formula { width: 170px; min-width: 155px; }
+    .col-desc    { width: 220px; min-width: 180px; }
+    .col-problem { min-width: 200px; }
+    .col-btn     { width: 100px; min-width: 90px; text-align: center; }
+    .col-answer  { min-width: 180px; }
+
+    /* 법칙 이름 */
+    .law-name {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--accent);
+      line-height: 1.3;
+    }
+    .law-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    td { color: var(--text); }
+
+    /* 공식 */
+    .formula-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: var(--accent2);
+      background: #eef2ff;
+      padding: 4px 9px;
+      border-radius: 5px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    /* 설명 */
+    .desc-text {
+      color: var(--text);
+      font-size: 0.825rem;
+      line-height: 1.6;
+    }
+    .desc-text .var {
+      color: var(--accent2);
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+    }
+
+    /* 문제 */
+    .problem-text {
+      color: var(--text);
+      font-size: 0.825rem;
+      line-height: 1.6;
+      padding: 8px 10px;
+      background: #f0f8ff;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 5px 5px 0;
+    }
+    .problem-text .given {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      margin-top: 5px;
+    }
+
+    /* 버튼 */
+    .ans-btn {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .ans-btn:hover { opacity: 0.85; }
+    .ans-btn.revealed {
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* 답변 */
+    .answer-cell {
+      font-size: 0.825rem;
+      line-height: 1.65;
+    }
+    .answer-hidden { display: none; }
+    .answer-box {
+      background: #e8f5ec;
+      border: 1px solid rgba(46,125,74,0.35);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .answer-box .ans-result {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--success);
+      margin-bottom: 6px;
+    }
+    .answer-box .ans-step {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.7;
+      font-family: 'Courier New', monospace;
+    }
+    .answer-box .ans-step span { color: var(--text); }
+
+    /* 그룹 구분선 */
+    tr.group-sep td {
+      border-top: 2px solid var(--border);
+    }
+
+    /* 섹션 레이블 */
+    .section-badge {
+      display: inline-block;
+      background: #e8f0fb;
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+    .section-badge.mag {
+      background: #fff3e0;
+      color: #c05020;
+    }
+    .law-name.mag { color: #c05020; }
+
+    /* ── 레이아웃 ── */
+    body { padding: 0; display: flex; flex-direction: column; height: 100vh; }
+    .page-layout { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+    .sidebar {
+      flex-shrink: 0; background: var(--surface);
+      border-bottom: 2px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,.06);
+    }
+    .sidebar-hd { display: none; }
+    .sidebar-menu {
+      list-style: none; display: flex; flex-direction: row; flex-wrap: nowrap;
+      align-items: center; padding: 0 16px 0 320px; margin: 0; overflow-x: auto;
+    }
+    .sidebar-menu li {
+      padding: 10px 16px; cursor: pointer; font-size: 13px; color: var(--text);
+      white-space: nowrap; border-bottom: 3px solid transparent;
+      transition: all .15s; margin-bottom: -2px;
+    }
+    .sidebar-menu li.cat {
+      font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
+      padding: 10px 8px 10px 20px; cursor: default;
+      text-transform: uppercase; letter-spacing: .05em;
+      border-left: 1px solid var(--border); border-bottom: 3px solid transparent;
+    }
+    .sidebar-menu li.cat:first-child { border-left: none; padding-left: 4px; }
+    .sidebar-menu li:not(.cat):hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .sidebar-menu li.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .sidebar-menu li.cat:hover { color: var(--text-muted); border-bottom-color: transparent; }
+    .sidebar-spacer { display: none; }
+    .sidebar-divider { display: none; }
+    .content-area { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg); }
+    .table-wrap { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.07); background: var(--surface); }
+
+    /* ── 모바일 반응형 ── */
+    @media(max-width:640px){
+      body { overflow: auto; height: auto; }
+      .page-layout { flex-direction: column; overflow: visible; }
+
+      /* 사이드바 → 가로 스크롤 탭 */
+      .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto;
+        overflow-y: hidden; -webkit-overflow-scrolling: touch;
+        border-right: none; border-bottom: 2px solid var(--border); flex-shrink: 0; }
+      .sidebar-hd { display: none; }
+      .sidebar-menu { flex-direction: row; flex-wrap: nowrap; flex: none; }
+      .sidebar-menu li { white-space: nowrap; border-bottom: none;
+        border-right: 1px solid var(--border); padding: 10px 12px;
+        font-size: 0.82rem; flex-shrink: 0; }
+      .sidebar-menu li.cat { display: none; }
+      .sidebar-spacer { display: none; }
+
+      /* 콘텐츠 */
+      .content-area { overflow-y: visible; padding: 14px; }
+
+      /* 테이블 가로 스크롤 */
+      .table-wrap { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+
+<div class="page-layout">
+  <nav class="sidebar">
+    <div class="sidebar-hd">전기 법칙</div>
+    <ul class="sidebar-menu">
+      <li class="cat">전기 법칙</li>
+      <li onclick="scrollSec('sec-elec')">⚡ 기본 법칙</li>
+      <li onclick="scrollSec('sec-mag')">🧲 자기학</li>
+    </ul>
+  </nav>
+
+  <div class="content-area">
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="col-no">No</th>
+      <th class="col-law">전기 법칙 이름</th>
+      <th class="col-formula">관련 공식</th>
+      <th class="col-desc">공식 설명</th>
+      <th class="col-problem">Sample 문제</th>
+      <th class="col-btn">답변 표시</th>
+      <th class="col-answer">답변</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- ══════ 옴의 법칙 ══════ -->
+    <tr id="sec-elec">
+      <td class="col-law">
+        <div class="section-badge">기본 법칙</div>
+        <div class="law-name">옴의 법칙</div>
+        <div class="law-sub">Ohm's Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">V = I × R</span>
+          <span class="formula">I = V / R</span>
+          <span class="formula">R = V / I</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          도체에 흐르는 <span class="var">전류(I)</span>는 <span class="var">전압(V)</span>에 비례하고 <span class="var">저항(R)</span>에 반비례한다.<br><br>
+          단위: V=볼트(V), I=암페어(A), R=옴(Ω)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          저항 <b>R = 10 Ω</b>인 도체에 <b>V = 24 V</b>의 전압을 인가했을 때 흐르는 전류는?
+          <div class="given">주어진 값: V = 24 V, R = 10 Ω</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-ohm1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-ohm1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">I = 2.4 A</div>
+            <div class="ans-step">
+              <span>I = V / R</span><br>
+              = 24 / 10<br>
+              = <span>2.4 A</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="col-law">
+        <div class="law-name">옴의 법칙</div>
+        <div class="law-sub">저항 구하기</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">R = V / I</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          전압과 전류를 알 때 저항을 구한다.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          어떤 도체에 <b>V = 120 V</b>를 인가했더니 <b>I = 4 A</b>가 흘렀다. 이 도체의 저항은?
+          <div class="given">주어진 값: V = 120 V, I = 4 A</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-ohm2')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-ohm2" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">R = 30 Ω</div>
+            <div class="ans-step">
+              <span>R = V / I</span><br>
+              = 120 / 4<br>
+              = <span>30 Ω</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 전력 공식 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">전력</div>
+        <div class="law-name">전력 공식</div>
+        <div class="law-sub">Power Formula</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">P = V × I</span>
+          <span class="formula">P = I² × R</span>
+          <span class="formula">P = V² / R</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          단위 시간당 소비하는 전기 에너지.<br>
+          <span class="var">P</span> = 전력(W),&nbsp;
+          <span class="var">V</span> = 전압(V),<br>
+          <span class="var">I</span> = 전류(A),&nbsp;
+          <span class="var">R</span> = 저항(Ω)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>R = 50 Ω</b>인 저항에 <b>I = 3 A</b>가 흐를 때 소비 전력은?
+          <div class="given">주어진 값: I = 3 A, R = 50 Ω</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-pow1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-pow1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">P = 450 W</div>
+            <div class="ans-step">
+              <span>P = I² × R</span><br>
+              = 3² × 50<br>
+              = 9 × 50<br>
+              = <span>450 W</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="col-law">
+        <div class="law-name">전력 공식</div>
+        <div class="law-sub">전압·전류 이용</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">P = V × I</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          전압과 전류의 곱으로 전력을 구한다.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          가정용 전열기에 <b>V = 220 V</b>가 인가되고 <b>I = 5 A</b>가 흐른다. 소비 전력과 1시간 동안 소비한 전력량(Wh)은?
+          <div class="given">주어진 값: V = 220 V, I = 5 A, t = 1 h</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-pow2')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-pow2" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">P = 1,100 W &nbsp;/ 1,100 Wh</div>
+            <div class="ans-step">
+              <span>P = V × I</span><br>
+              = 220 × 5 = <span>1,100 W</span><br><br>
+              <span>전력량 W = P × t</span><br>
+              = 1,100 × 1 = <span>1,100 Wh</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ KVL ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">키르히호프</div>
+        <div class="law-name">KVL</div>
+        <div class="law-sub">전압 법칙<br>Kirchhoff's Voltage Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">ΣV = 0</span>
+          <span class="formula">V_s = V_1 + V_2 + ···</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          임의의 폐루프(loop)를 한 방향으로 순회할 때, 모든 전압 상승과 전압 강하의 대수합은 0이다.<br><br>
+          전압원 = 상승(+), 저항 전압 = 강하(−)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          직렬 회로에 <b>V<sub>s</sub> = 12 V</b> 전원이 있고, <b>R₁ = 3 Ω, R₂ = ?</b> 이 직렬 연결되어 있다. 전류 <b>I = 2 A</b>일 때 R₂ 양단의 전압을 구하라.
+          <div class="given">주어진 값: V_s = 12 V, R₁ = 3 Ω, I = 2 A</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-kvl1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-kvl1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">V₂ = 6 V</div>
+            <div class="ans-step">
+              <span>V₁ = I × R₁</span><br>
+              = 2 × 3 = 6 V<br><br>
+              <span>KVL: V_s = V₁ + V₂</span><br>
+              12 = 6 + V₂<br>
+              V₂ = <span>6 V</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="col-law">
+        <div class="law-name">KVL</div>
+        <div class="law-sub">전류 계산 응용</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">V_s = I(R₁+R₂+···)</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          직렬 회로에서 KVL을 이용해 전류를 구하는 응용.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>V_s = 30 V</b>, <b>R₁ = 4 Ω</b>, <b>R₂ = 6 Ω</b>이 직렬 연결된 회로에서 전류와 각 저항의 전압을 구하라.
+          <div class="given">주어진 값: V_s = 30 V, R₁ = 4 Ω, R₂ = 6 Ω</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-kvl2')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-kvl2" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">I = 3 A &nbsp;/ V₁ = 12 V &nbsp;/ V₂ = 18 V</div>
+            <div class="ans-step">
+              <span>I = V_s / (R₁+R₂)</span><br>
+              = 30 / (4+6) = <span>3 A</span><br><br>
+              V₁ = 3×4 = <span>12 V</span><br>
+              V₂ = 3×6 = <span>18 V</span><br><br>
+              검증: 12+18 = 30 V ✓
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ KCL ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">키르히호프</div>
+        <div class="law-name">KCL</div>
+        <div class="law-sub">전류 법칙<br>Kirchhoff's Current Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">ΣI = 0</span>
+          <span class="formula">I_in = I_out</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          임의의 노드(node)에서 유입되는 전류의 합은 유출되는 전류의 합과 같다.<br><br>
+          유입 전류 합 = 유출 전류 합
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          한 노드에 <b>I₁ = 5 A</b>가 유입되고, <b>I₂ = 2 A</b>가 유출된다. 나머지 가지의 전류 <b>I₃</b>는?
+          <div class="given">주어진 값: I₁(in) = 5 A, I₂(out) = 2 A</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-kcl1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-kcl1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">I₃ = 3 A (유출)</div>
+            <div class="ans-step">
+              <span>KCL: I₁ = I₂ + I₃</span><br>
+              5 = 2 + I₃<br>
+              I₃ = <span>3 A</span> (유출)
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="col-law">
+        <div class="law-name">KCL</div>
+        <div class="law-sub">병렬 회로 응용</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">I_T = I₁ + I₂ + ···</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          병렬 회로에서 각 가지의 전류 합이 전체 전류와 같다.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>V = 12 V</b> 전원에 <b>R₁ = 6 Ω</b>, <b>R₂ = 4 Ω</b>이 병렬 연결. 각 가지 전류와 총 전류를 구하라.
+          <div class="given">주어진 값: V = 12 V, R₁ = 6 Ω, R₂ = 4 Ω</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-kcl2')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-kcl2" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">I₁=2A, I₂=3A, I_T=5A</div>
+            <div class="ans-step">
+              I₁ = V/R₁ = 12/6 = <span>2 A</span><br>
+              I₂ = V/R₂ = 12/4 = <span>3 A</span><br><br>
+              <span>KCL: I_T = I₁+I₂</span><br>
+              = 2+3 = <span>5 A</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 직렬 저항 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">저항 합성</div>
+        <div class="law-name">직렬 저항</div>
+        <div class="law-sub">Series Resistance</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">R_T = R₁+R₂+···+Rn</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          직렬로 연결된 저항의 합성 저항은 각 저항값의 단순 합.<br><br>
+          전류는 모든 저항에 동일하게 흐른다.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>R₁ = 10 Ω, R₂ = 22 Ω, R₃ = 8 Ω</b>이 직렬 연결될 때 합성 저항과, <b>V = 40 V</b>일 때 전류는?
+          <div class="given">주어진 값: R₁=10 Ω, R₂=22 Ω, R₃=8 Ω, V=40 V</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-ser1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-ser1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">R_T = 40 Ω &nbsp;/ I = 1 A</div>
+            <div class="ans-step">
+              <span>R_T = 10+22+8</span><br>
+              = <span>40 Ω</span><br><br>
+              <span>I = V / R_T</span><br>
+              = 40 / 40 = <span>1 A</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 병렬 저항 ══════ -->
+    <tr>
+      <td class="col-law">
+        <div class="law-name">병렬 저항</div>
+        <div class="law-sub">Parallel Resistance</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">1/R_T = 1/R₁+1/R₂+···</span>
+          <span class="formula">(2개: R_T = R₁R₂/(R₁+R₂))</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          병렬 연결된 합성 저항의 역수는 각 저항 역수의 합.<br><br>
+          전압은 모든 가지에 동일하게 걸린다.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>R₁ = 12 Ω, R₂ = 6 Ω</b>이 병렬 연결될 때 합성 저항은?
+          <div class="given">주어진 값: R₁ = 12 Ω, R₂ = 6 Ω</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-par1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-par1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">R_T = 4 Ω</div>
+            <div class="ans-step">
+              <span>R_T = R₁R₂/(R₁+R₂)</span><br>
+              = (12×6)/(12+6)<br>
+              = 72/18 = <span>4 Ω</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 줄의 법칙 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">열 에너지</div>
+        <div class="law-name">줄의 법칙</div>
+        <div class="law-sub">Joule's Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">Q = I²Rt</span>
+          <span class="formula">Q = VIt</span>
+          <span class="formula">Q = Pt</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          저항에서 발생하는 열에너지(Q).<br>
+          <span class="var">Q</span> = 열량(J),&nbsp;
+          <span class="var">I</span> = 전류(A),<br>
+          <span class="var">R</span> = 저항(Ω),&nbsp;
+          <span class="var">t</span> = 시간(s)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>R = 20 Ω</b>에 <b>I = 3 A</b>가 <b>t = 60 s</b> 동안 흐를 때 발생하는 열량은?
+          <div class="given">주어진 값: I = 3 A, R = 20 Ω, t = 60 s</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-joule1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-joule1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">Q = 10,800 J</div>
+            <div class="ans-step">
+              <span>Q = I²Rt</span><br>
+              = 3² × 20 × 60<br>
+              = 9 × 20 × 60<br>
+              = <span>10,800 J</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 패러데이 법칙 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">전자기 유도</div>
+        <div class="law-name">패러데이 법칙</div>
+        <div class="law-sub">Faraday's Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">e = -N × ΔΦ/Δt</span>
+          <span class="formula">|e| = N × ΔΦ/Δt</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          코일을 지나는 자속(Φ)의 변화가 기전력(e)을 유도한다.<br>
+          <span class="var">N</span> = 권선수,&nbsp;
+          <span class="var">Φ</span> = 자속(Wb),<br>
+          <span class="var">t</span> = 시간(s)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          권선수 <b>N = 200</b>인 코일에서 자속이 <b>0.5 s</b> 동안 <b>0.02 Wb</b> 변화할 때 유도 기전력은?
+          <div class="given">주어진 값: N = 200, ΔΦ = 0.02 Wb, Δt = 0.5 s</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-far1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-far1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">|e| = 8 V</div>
+            <div class="ans-step">
+              <span>|e| = N × ΔΦ/Δt</span><br>
+              = 200 × (0.02/0.5)<br>
+              = 200 × 0.04<br>
+              = <span>8 V</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 콘덴서 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">커패시터</div>
+        <div class="law-name">커패시터 공식</div>
+        <div class="law-sub">Capacitance</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">Q = C × V</span>
+          <span class="formula">E = ½CV²</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          <span class="var">Q</span> = 전하량(C),&nbsp;
+          <span class="var">C</span> = 정전용량(F),<br>
+          <span class="var">V</span> = 전압(V),&nbsp;
+          <span class="var">E</span> = 저장 에너지(J)<br><br>
+          커패시터에 충전되는 전하와 저장 에너지.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>C = 100 μF</b>인 커패시터에 <b>V = 50 V</b>를 인가. 충전 전하량과 저장 에너지는?
+          <div class="given">주어진 값: C = 100×10⁻⁶ F, V = 50 V</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-cap1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-cap1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">Q = 5×10⁻³ C &nbsp;/ E = 0.125 J</div>
+            <div class="ans-step">
+              <span>Q = CV</span><br>
+              = 100×10⁻⁶ × 50<br>
+              = <span>5×10⁻³ C (5 mC)</span><br><br>
+              <span>E = ½CV²</span><br>
+              = 0.5 × 100×10⁻⁶ × 50²<br>
+              = <span>0.125 J</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 인덕터 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">인덕터</div>
+        <div class="law-name">인덕턴스 공식</div>
+        <div class="law-sub">Inductance</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">V_L = L × ΔI/Δt</span>
+          <span class="formula">E = ½LI²</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          <span class="var">L</span> = 인덕턴스(H),&nbsp;
+          <span class="var">I</span> = 전류(A),<br>
+          <span class="var">t</span> = 시간(s),&nbsp;
+          <span class="var">E</span> = 저장 에너지(J)<br><br>
+          인덕터에 유도되는 전압과 저장 에너지.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>L = 0.5 H</b>인 코일에서 전류가 <b>0.1 s</b> 동안 <b>2 A → 6 A</b>로 변할 때 유도 전압은?
+          <div class="given">주어진 값: L = 0.5 H, ΔI = 4 A, Δt = 0.1 s</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-ind1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-ind1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">V_L = 20 V</div>
+            <div class="ans-step">
+              <span>V_L = L × ΔI/Δt</span><br>
+              ΔI = 6−2 = 4 A<br>
+              = 0.5 × (4/0.1)<br>
+              = 0.5 × 40<br>
+              = <span>20 V</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+
+    <!-- ══════════════════════════════════════════
+         가우스의 법칙
+    ══════════════════════════════════════════ -->
+
+    <!-- ══════ 가우스의 전기 법칙 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge">가우스 법칙</div>
+        <div class="law-name">가우스의<br>전기 법칙</div>
+        <div class="law-sub">Gauss's Law<br>(Electricity)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">Φ_E = Q / ε₀</span>
+          <span class="formula">E = Q / (4πε₀r²)</span>
+          <span class="formula">E = kQ / r²</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          임의의 닫힌 면을 통과하는 전기 선속(Φ_E)은 내부의 총 전하량(Q)을 진공 유전율(ε₀)로 나눈 값과 같다.<br><br>
+          <span class="var">ε₀</span> = 8.854×10⁻¹² F/m,<br>
+          <span class="var">k</span> = 9×10⁹ N·m²/C²,<br>
+          <span class="var">Q</span> = 전하량(C), <span class="var">r</span> = 거리(m)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          점전하 <b>Q = 5 μC</b>으로부터 <b>r = 0.3 m</b> 떨어진 점에서의 전기장 E는?<br>
+          (k = 9×10⁹ N·m²/C²)
+          <div class="given">주어진 값: Q = 5×10⁻⁶ C, r = 0.3 m</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-gauss-e1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-gauss-e1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">E = 5×10⁵ V/m</div>
+            <div class="ans-step">
+              <span>E = kQ / r²</span><br>
+              = (9×10⁹ × 5×10⁻⁶) / (0.3)²<br>
+              = 45,000 / 0.09<br>
+              = <span>500,000 V/m</span><br>
+              = <span>5×10⁵ V/m</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 가우스의 자기 법칙 ══════ -->
+    <tr>
+      <td class="col-law">
+        <div class="law-name">가우스의<br>자기 법칙</div>
+        <div class="law-sub">Gauss's Law<br>(Magnetism)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">∮B·dA = 0</span>
+          <span class="formula">Φ_B(총합) = 0</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          임의의 닫힌 면을 통과하는 총 자기 선속(Φ_B)은 항상 0이다.<br><br>
+          자기 단극자(magnetic monopole)는 존재하지 않으며, N극과 S극은 항상 쌍으로 존재한다.<br><br>
+          맥스웰 방정식 중 하나.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          막대자석을 완전히 감싸는 임의의 닫힌 면(구면)을 통과하는 총 자기 선속은 얼마인가? 그 이유는?
+          <div class="given">조건: 임의의 닫힌 면 내부에 막대자석 1개 포함</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-gauss-b1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-gauss-b1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">Φ_B = 0</div>
+            <div class="ans-step">
+              <span>∮B·dA = 0 (항상)</span><br><br>
+              N극에서 나간 자기력선은<br>
+              모두 S극으로 돌아오므로<br>
+              닫힌 면을 통과하는<br>
+              순 자기 선속 = <span>0</span><br><br>
+              자기 단극자가 없으므로<br>
+              자기력선은 항상 연속 폐곡선.
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════════════════════════════════════════
+         자기에 관한 법칙
+    ══════════════════════════════════════════ -->
+
+    <!-- ══════ 자속 밀도 / B-H 관계 ══════ -->
+    <tr id="sec-mag" class="group-sep">
+      <td class="col-law">
+        <div class="section-badge mag">자기</div>
+        <div class="law-name mag">자속 밀도</div>
+        <div class="law-sub">Magnetic Flux Density<br>B-H 관계</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">B = μ × H</span>
+          <span class="formula">Φ = B × A</span>
+          <span class="formula">μ = μ₀ × μr</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          <span class="var">B</span> = 자속 밀도(T, 테슬라),<br>
+          <span class="var">H</span> = 자기장 세기(A/m),<br>
+          <span class="var">μ</span> = 투자율(H/m),<br>
+          <span class="var">μ₀</span> = 진공 투자율(4π×10⁻⁷ H/m),<br>
+          <span class="var">μr</span> = 비투자율,<br>
+          <span class="var">Φ</span> = 자속(Wb), <span class="var">A</span> = 단면적(m²)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          비투자율 <b>μr = 500</b>인 철심에서 자기장 세기 <b>H = 1,000 A/m</b>일 때 자속 밀도 B는?<br>
+          (μ₀ = 4π×10⁻⁷ H/m)
+          <div class="given">주어진 값: μr = 500, H = 1,000 A/m</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-bh1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-bh1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">B ≈ 0.628 T</div>
+            <div class="ans-step">
+              <span>μ = μ₀ × μr</span><br>
+              = 4π×10⁻⁷ × 500<br>
+              ≈ 6.283×10⁻⁴ H/m<br><br>
+              <span>B = μ × H</span><br>
+              = 6.283×10⁻⁴ × 1,000<br>
+              = <span>0.628 T</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 앙페르의 법칙 ══════ -->
+    <tr>
+      <td class="col-law">
+        <div class="law-name mag">앙페르의 법칙</div>
+        <div class="law-sub">Ampere's Law<br>(환상 솔레노이드)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">H × l = N × I</span>
+          <span class="formula">H = NI / l</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          폐경로를 따라 자기장 세기의 선적분은 그 경로가 둘러싸는 전류의 합과 같다.<br><br>
+          <span class="var">H</span> = 자기장 세기(A/m),<br>
+          <span class="var">l</span> = 자로 길이(m),<br>
+          <span class="var">N</span> = 권선수, <span class="var">I</span> = 전류(A)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          자로 길이 <b>l = 0.5 m</b>인 환상 철심에 <b>N = 400</b>회 권선, <b>I = 2 A</b>가 흐를 때 자기장 세기 H는?
+          <div class="given">주어진 값: l = 0.5 m, N = 400, I = 2 A</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-amp1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-amp1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">H = 1,600 A/m</div>
+            <div class="ans-step">
+              <span>H = NI / l</span><br>
+              = (400 × 2) / 0.5<br>
+              = 800 / 0.5<br>
+              = <span>1,600 A/m</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 비오-사바르 법칙 ══════ -->
+    <tr>
+      <td class="col-law">
+        <div class="law-name mag">비오-사바르 법칙</div>
+        <div class="law-sub">Biot-Savart Law<br>(무한 직선 도체)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">B = μ₀I / (2πr)</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          전류 소자가 주변 공간에 만드는 자기장을 계산하는 법칙.<br>
+          무한 직선 도체로부터 거리 <span class="var">r</span>인 점의 자속 밀도.<br><br>
+          <span class="var">μ₀</span> = 4π×10⁻⁷ H/m,<br>
+          <span class="var">I</span> = 전류(A), <span class="var">r</span> = 거리(m)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          <b>I = 10 A</b>가 흐르는 무한 직선 도체로부터 <b>r = 5 cm</b> 떨어진 점의 자속 밀도 B는?
+          <div class="given">주어진 값: I = 10 A, r = 0.05 m</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-biot1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-biot1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">B = 40 μT</div>
+            <div class="ans-step">
+              <span>B = μ₀I / (2πr)</span><br>
+              = (4π×10⁻⁷ × 10)<br>
+              &nbsp;&nbsp;/ (2π × 0.05)<br>
+              = 4π×10⁻⁶ / (0.1π)<br>
+              = 4×10⁻⁵ T<br>
+              = <span>40 μT</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 자기력 (앙페르 힘) ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge mag">자기력</div>
+        <div class="law-name mag">앙페르의 힘 법칙</div>
+        <div class="law-sub">Ampere's Force Law<br>(도체에 작용하는 힘)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">F = B × I × L × sinθ</span>
+          <span class="formula">(θ=90°: F = BIL)</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          자기장 속에 놓인 전류 도체에 작용하는 힘.<br><br>
+          <span class="var">F</span> = 힘(N),<br>
+          <span class="var">B</span> = 자속 밀도(T),<br>
+          <span class="var">I</span> = 전류(A), <span class="var">L</span> = 도체 길이(m),<br>
+          <span class="var">θ</span> = B와 I의 각도
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          자속 밀도 <b>B = 0.8 T</b>인 자기장에 <b>I = 5 A</b>가 흐르는 길이 <b>L = 0.3 m</b>인 도체가 수직(θ=90°)으로 놓여 있을 때 작용하는 힘은?
+          <div class="given">주어진 값: B = 0.8 T, I = 5 A, L = 0.3 m, θ = 90°</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-famp1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-famp1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">F = 1.2 N</div>
+            <div class="ans-step">
+              <span>F = BIL (sin90°=1)</span><br>
+              = 0.8 × 5 × 0.3<br>
+              = <span>1.2 N</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 로렌츠 힘 ══════ -->
+    <tr>
+      <td class="col-law">
+        <div class="law-name mag">로렌츠 힘</div>
+        <div class="law-sub">Lorentz Force<br>(하전입자에 작용)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">F = q × v × B × sinθ</span>
+          <span class="formula">(θ=90°: F = qvB)</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          자기장 속에서 운동하는 하전 입자에 작용하는 힘.<br><br>
+          <span class="var">F</span> = 힘(N),<br>
+          <span class="var">q</span> = 전하량(C),<br>
+          <span class="var">v</span> = 속도(m/s),<br>
+          <span class="var">B</span> = 자속 밀도(T)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          전하량 <b>q = 1.6×10⁻¹⁹ C</b>인 전자가 <b>B = 0.5 T</b>인 자기장 속에서 <b>v = 3×10⁶ m/s</b>로 수직 운동할 때 받는 힘은?
+          <div class="given">주어진 값: q = 1.6×10⁻¹⁹ C, v = 3×10⁶ m/s, B = 0.5 T</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-lor1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-lor1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">F = 2.4×10⁻¹³ N</div>
+            <div class="ans-step">
+              <span>F = qvB</span><br>
+              = 1.6×10⁻¹⁹ × 3×10⁶ × 0.5<br>
+              = 1.6×10⁻¹⁹ × 1.5×10⁶<br>
+              = <span>2.4×10⁻¹³ N</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 렌츠의 법칙 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge mag">유도 법칙</div>
+        <div class="law-name mag">렌츠의 법칙</div>
+        <div class="law-sub">Lenz's Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">e = -N × ΔΦ/Δt</span>
+          <span class="formula">(− 부호의 의미)</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          유도 기전력(전류)의 방향은 자속의 변화를 <b>방해</b>하는 방향으로 발생한다.<br><br>
+          패러데이 법칙의 음(−) 부호가 이를 나타내며, 에너지 보존 법칙의 자기적 표현이다.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          코일에 관통하는 자속이 증가하고 있다. 렌츠의 법칙에 의해 유도 전류가 만드는 자기장의 방향은?
+          <div class="given">조건: 외부 자속 증가 (위 방향)</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-lenz1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-lenz1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">유도 자기장: 아래 방향 (반대)</div>
+            <div class="ans-step">
+              <span>렌츠의 법칙:</span><br>
+              외부 자속 ↑(증가)<br>
+              → 유도 전류는 이를 방해<br>
+              → 유도 자기장은 ↓(반대 방향)<br><br>
+              오른나사 법칙 적용 시<br>
+              코일에 시계 방향 전류 유도
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 플레밍의 왼손 법칙 ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge mag">플레밍 법칙</div>
+        <div class="law-name mag">플레밍의<br>왼손 법칙</div>
+        <div class="law-sub">Fleming's Left-Hand Rule<br>(전동기 원리)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">F = B × I × L</span>
+          <span class="formula">엄지: 힘(F) 방향</span>
+          <span class="formula">검지: 자기장(B)</span>
+          <span class="formula">중지: 전류(I)</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          왼손의 세 손가락을 직각으로 폈을 때:<br>
+          <span class="var">검지</span> → 자기장(B) 방향,<br>
+          <span class="var">중지</span> → 전류(I) 방향,<br>
+          <span class="var">엄지</span> → 힘(F, 운동) 방향.<br><br>
+          전류가 흐르는 도체가 자기장 속에서 받는 힘의 방향 결정. <b>전동기(모터)</b>의 원리.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          자속 밀도 <b>B = 0.4 T</b>의 자기장 속에서 <b>I = 8 A</b>가 흐르는 길이 <b>L = 0.25 m</b>의 도체에 작용하는 힘과 방향(B⊥I)은?
+          <div class="given">주어진 값: B = 0.4 T, I = 8 A, L = 0.25 m, θ = 90°</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-lh1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-lh1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">F = 0.8 N</div>
+            <div class="ans-step">
+              <span>F = BIL</span><br>
+              = 0.4 × 8 × 0.25<br>
+              = <span>0.8 N</span><br><br>
+              방향: 왼손 법칙으로<br>
+              B·I에 수직인 방향
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 플레밍의 오른손 법칙 ══════ -->
+    <tr>
+      <td class="col-law">
+        <div class="law-name mag">플레밍의<br>오른손 법칙</div>
+        <div class="law-sub">Fleming's Right-Hand Rule<br>(발전기 원리)</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">e = B × L × v</span>
+          <span class="formula">엄지: 운동(v) 방향</span>
+          <span class="formula">검지: 자기장(B)</span>
+          <span class="formula">중지: 기전력(e) 방향</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          오른손의 세 손가락을 직각으로 폈을 때:<br>
+          <span class="var">검지</span> → 자기장(B) 방향,<br>
+          <span class="var">엄지</span> → 도체 운동(v) 방향,<br>
+          <span class="var">중지</span> → 유도 기전력(e) 방향.<br><br>
+          도체가 자기장 속에서 운동할 때 유도되는 기전력의 방향 결정. <b>발전기</b>의 원리.
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          자속 밀도 <b>B = 1.2 T</b>인 자기장에서 길이 <b>L = 0.5 m</b>의 도체가 <b>v = 10 m/s</b>로 B에 수직 운동할 때 유도 기전력은?
+          <div class="given">주어진 값: B = 1.2 T, L = 0.5 m, v = 10 m/s</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-rh1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-rh1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">e = 6 V</div>
+            <div class="ans-step">
+              <span>e = BLv</span><br>
+              = 1.2 × 0.5 × 10<br>
+              = <span>6 V</span><br><br>
+              방향: 오른손 법칙으로<br>
+              중지가 가리키는 방향
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ══════ 자기 회로 (옴의 법칙) ══════ -->
+    <tr class="group-sep">
+      <td class="col-law">
+        <div class="section-badge mag">자기 회로</div>
+        <div class="law-name mag">자기 회로<br>옴의 법칙</div>
+        <div class="law-sub">Magnetic Circuit<br>Ohm's Law</div>
+      </td>
+      <td class="col-formula">
+        <div class="formula-block">
+          <span class="formula">F = N × I (기자력)</span>
+          <span class="formula">Rm = l / (μA)</span>
+          <span class="formula">Φ = F / Rm</span>
+        </div>
+      </td>
+      <td class="col-desc">
+        <div class="desc-text">
+          전기 회로의 옴의 법칙에 대응하는 자기 회로 법칙.<br><br>
+          <span class="var">F</span> = 기자력(A·T),<br>
+          <span class="var">Rm</span> = 자기 저항(A·T/Wb),<br>
+          <span class="var">Φ</span> = 자속(Wb),<br>
+          <span class="var">l</span> = 자로 길이(m),<br>
+          <span class="var">A</span> = 단면적(m²)
+        </div>
+      </td>
+      <td class="col-problem">
+        <div class="problem-text">
+          비투자율 <b>μr = 1,000</b>, 단면적 <b>A = 4×10⁻⁴ m²</b>, 자로 길이 <b>l = 0.2 m</b>인 철심에 <b>N = 500</b>회, <b>I = 0.5 A</b>를 인가할 때 자속 Φ는?
+          <div class="given">주어진 값: μr=1,000, A=4×10⁻⁴ m², l=0.2 m, N=500, I=0.5 A</div>
+        </div>
+      </td>
+      <td class="col-btn"><button class="ans-btn" onclick="toggleAnswer(this, 'ans-magohm1')">답 보기</button></td>
+      <td class="col-answer">
+        <div id="ans-magohm1" class="answer-hidden">
+          <div class="answer-box">
+            <div class="ans-result">Φ ≈ 6.28×10⁻⁴ Wb</div>
+            <div class="ans-step">
+              <span>F = NI</span> = 500×0.5 = 250 A·T<br><br>
+              <span>μ = μ₀μr</span><br>
+              = 4π×10⁻⁷ × 1,000<br>
+              ≈ 1.257×10⁻³ H/m<br><br>
+              <span>Rm = l/(μA)</span><br>
+              = 0.2 / (1.257×10⁻³ × 4×10⁻⁴)<br>
+              ≈ 3.98×10⁵ A·T/Wb<br><br>
+              <span>Φ = F/Rm</span><br>
+              = 250 / 3.98×10⁵<br>
+              ≈ <span>6.28×10⁻⁴ Wb</span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<script>
+// 행 번호 자동 삽입
+document.querySelectorAll('tbody tr').forEach((tr, i) => {
+  const td = document.createElement('td');
+  td.className = 'col-no';
+  td.textContent = i + 1;
+  tr.insertBefore(td, tr.firstElementChild);
+});
+
+
+// 모달 외부 클릭 시 닫기
+document.getElementById('previewModal').addEventListener('click', function(e) {
+  if (e.target === this) closePreview();
+});
+
+function toggleAnswer(btn, id) {
+  const box = document.getElementById(id);
+  const hidden = box.classList.contains('answer-hidden');
+  if (hidden) {
+    box.classList.remove('answer-hidden');
+    btn.textContent = '답 숨기기';
+    btn.classList.add('revealed');
+  } else {
+    box.classList.add('answer-hidden');
+    btn.textContent = '답 보기';
+    btn.classList.remove('revealed');
+  }
+}
+
+function scrollSec(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 스크롤 시 사이드바 활성 항목 자동 업데이트
+const _secIds = ['sec-elec','sec-mag'];
+const _obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      document.querySelectorAll('.sidebar-menu li:not(.cat)').forEach(li => {
+        li.classList.toggle('active', li.getAttribute('onclick')?.includes(id));
+      });
+    }
+  });
+}, { root: document.querySelector('.content-area'), threshold: 0.15 });
+_secIds.forEach(id => { const el = document.getElementById(id); if (el) _obs.observe(el); });
+window.addEventListener('message', e => {
+  if (e.data && e.data.action === 'scrollSec') scrollSec(e.data.param);
+});
+</script>
+  </div><!-- .content-area -->
+</div><!-- .page-layout -->
+</body>
+</html>
